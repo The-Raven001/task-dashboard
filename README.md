@@ -5,5 +5,5 @@ npm run dev
 To run back-end:
 
 -Make sure uvicorn is installed "pip install fastapi uvicorn[standard]"
--Run ".venv\Scripts\Activate.ps1"
--Run "uvicorn app.main:app" --reload or to force it "python -m uvicorn app.main:app --reload"
+-Run "venv\Scripts\Activate"
+-Run "uvicorn app.main:app --reload" or to force it "python -m uvicorn app.main:app --reload"
