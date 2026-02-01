@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "../auth/AuthContext";
 
 export function Dashboard(){
@@ -6,8 +5,8 @@ export function Dashboard(){
 
     return (
         <div>
-            <h1>Dashboard</h1>
-            <p>Welcom {user?.email}</p>
+            <h1 className="flex justify-center mb-5">Dashboard</h1>
+            <p>Welcome {user?.email}</p>
             <button onClick={logout}>Logout</button>
         </div>
     )

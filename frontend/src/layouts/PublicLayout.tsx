@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import PageContainer from "./PageContainer";
 
-export default function DashboardLayout() {
+export default function PublicLayout() {
     return (
         <>
         <Navbar />
@@ -10,5 +10,5 @@ export default function DashboardLayout() {
             <Outlet />
         </PageContainer>
         </>
-    );
+    )
 }

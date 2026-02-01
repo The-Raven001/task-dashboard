@@ -24,8 +24,9 @@ export function Login() {
 
     return (
         <div>
+            <h1 className="flex justify-center mb-5">Login</h1>
             <form onSubmit={handleSubmit}
-            className="flex justify-center"
+            
             >
             <input 
             type="email"
