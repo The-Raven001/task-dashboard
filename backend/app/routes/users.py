@@ -3,8 +3,8 @@ from app.database import get_db
 from sqlalchemy.orm import Session
 from app import models, schemas
 from app.utils import hash, verify
-from app.routes.token import create_access_token
-from .auth import get_current_user
+from app.core.token import create_access_token
+from app.dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

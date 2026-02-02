@@ -1,50 +1,37 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
-import os
+from fastapi import APIRouter, Depends, HTTPException, status
+from app.dependencies.auth import get_current_user
 from sqlalchemy.orm import Session
+from datetime import timedelta
+
 from app.database import get_db
-from app import models
+from app import models, schemas
+from app.core.security import verify_password
+from app.core.token import create_access_token
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = "HS256"
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
+@router.post("/login", response_model=schemas.Token)
+def  login( user: schemas.UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(
+        models.User.email == user.email
+    ).first()
 
-def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db)
-):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNATHORIZED,
+            detail="Invalid credentials",
+        )
+    
+    access_token = create_access_token(
+        data={"sub": str(db_user.id)},
+        expire_delta=timedelta(minutes=60)
     )
 
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
 
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-
-    user = db.query(models.User).filter(models.User.email == email).first()
-
-    if user is None:
-        raise credentials_exception
-    
-    return user
-
-"""
-Validates JWT access token and returns the authenticated user.
-
-    - Decodes the JWT token
-    - Extracts the user ID from the payload
-    - Verifies the user exists and is active
-
-    Raises:
-        HTTPException(401): If token is invalid or expired
-
-"""
+@router.get("/me", response_model=schemas.User)
+def read_current_user(current_user: models.User = Depends(get_current_user)):
+    return current_user
