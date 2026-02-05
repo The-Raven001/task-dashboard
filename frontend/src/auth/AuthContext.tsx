@@ -24,11 +24,30 @@ export function AuthProvider({children}: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState (true)
 
+    
+
     const login = async (email: string, password: string) => {
-        //placeholder
-        setUser({id: 1, email: "example.email.com"})
-        console.log(email, password);
+
+        const response = await fetch("http://localhost:8000/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email, password}),
+        });
+
+        if (!response.ok){
+            throw new Error("Invalid credentials");
+        }
+        
+        const data = await response.json();
+
+        localStorage.setItem("token", data.access_token)
+
+        await fetchCurrentUser();
     };
+
+
     const logout = () => {
         setUser(null)
         localStorage.removeItem("token")
@@ -41,22 +60,34 @@ export function AuthProvider({children}: { children: ReactNode }) {
         loading,
     };
 
-    useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const fetchCurrentUser = async () => {
+        const token = localStorage.getItem("token");
 
-    if (storedUser) {
-        setUser(JSON.parse(storedUser) as User);
-    }
-    setLoading(false)
-    }, []) // The brackets at the end make sure it renders at the begining
-
-    useEffect(() => {
-        if(user) {
-            localStorage.setItem("user", JSON.stringify(user));
-        } else {
-            localStorage.removeItem("user")
+        if (!token){
+            setUser(null);
+            return
         }
-    }, [user])
+
+        const response = await fetch("http://localhost:8000/auth/me",
+            {headers: {
+                Authorization: `Bearer ${token}`,
+            }}
+        )
+        
+        if (!response.ok) {
+            logout();
+            return
+        }
+
+        const userData = await response.json();
+        setUser(userData)
+
+    }
+
+    useEffect(() => {
+    fetchCurrentUser().finally(() => setLoading(false));
+    }, [])
+
 
     return (
         <AuthContext.Provider value={value}>

@@ -7,24 +7,29 @@ from app.database import get_db
 from app import models, schemas
 from app.core.security import verify_password
 from app.core.token import create_access_token
+from app.routes.users import get_user_by_email
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/login", response_model=schemas.Token)
-def  login( user: schemas.UserLogin, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(
-        models.User.email == user.email
-    ).first()
+def  login(user_credentials: schemas.UserLogin, db:Session = Depends(get_db)):
 
-    if not db_user or not verify_password(user.password, db_user.hashed_password):
+    user = get_user_by_email(db, user_credentials.email)
+
+    if not user:
         raise HTTPException(
-            status_code=status.HTTP_401_UNATHORIZED,
-            detail="Invalid credentials",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
         )
+
+    if not verify_password(user_credentials.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
+        ) 
     
     access_token = create_access_token(
-        data={"sub": str(db_user.id)},
-        expire_delta=timedelta(minutes=60)
+        {"sub": str(user.id)}
     )
 
     return {
@@ -32,6 +37,7 @@ def  login( user: schemas.UserLogin, db: Session = Depends(get_db)):
         "token_type": "bearer"
     }
 
-@router.get("/me", response_model=schemas.User)
+
+@router.get("/me", response_model=schemas.UserOut)
 def read_current_user(current_user: models.User = Depends(get_current_user)):
     return current_user
