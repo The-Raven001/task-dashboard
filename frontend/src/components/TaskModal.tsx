@@ -20,6 +20,7 @@ export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
         await onCreate(title, description);
 
         setTitle("");
+        setDescription("")
         setLoading(false);
         onClose();
     }
@@ -38,9 +39,8 @@ export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
                     onChange={event => setTitle(event.target.value)}
                     required
                      />
-                </form>
 
-                <form >
+
                     <textarea
                     className="w-full border p-2 mb-4 h-32 resize-none"
                     placeholder="Task description"
@@ -48,8 +48,6 @@ export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
                     onChange={event => setDescription(event.target.value)}
                     required
                     />
-
-                </form>
 
                 <div className="flex justify-end gap-2">
                     <button
@@ -68,6 +66,9 @@ export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
                         {loading ? "Creating..." : "Create"}
                     </button>
                 </div>
+                </form>
+
+                
             </div>
         </div>
     )

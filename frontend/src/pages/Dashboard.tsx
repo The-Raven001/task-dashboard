@@ -5,6 +5,7 @@ import { TaskModal } from "../components/TaskModal";
 type Task = {
     id: number;
     title: string;
+    descritpion: string;
     completed: boolean;
     };
 
@@ -24,7 +25,7 @@ export function Dashboard(){
          if (!token) return;
         
         try {
-            const response = await fetch("http://localhost:8000tasks", {
+            const response = await fetch("http://localhost:8000/tasks", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -88,6 +89,7 @@ export function Dashboard(){
                         <li key={task.id}>
                             {task.title} {task.completed ? "✅" : "❌"}
                         </li>
+                        
                     ))}
                 </ul>
             )}
