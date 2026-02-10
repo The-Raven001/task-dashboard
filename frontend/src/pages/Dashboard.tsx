@@ -5,7 +5,7 @@ import { TaskModal } from "../components/TaskModal";
 type Task = {
     id: number;
     title: string;
-    descritpion: string;
+    description: string;
     completed: boolean;
     };
 
@@ -42,7 +42,7 @@ export function Dashboard(){
         }    
     }
 
-    async function createTask(title: string) {
+    async function createTask(title: string, description: string) {
         const token = localStorage.getItem("token");
         if (!token) return;
 
@@ -52,7 +52,7 @@ export function Dashboard(){
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ title }),
+            body: JSON.stringify({ title, description }),
         });
 
         if (!response.ok){
@@ -88,13 +88,13 @@ export function Dashboard(){
                     {tasks.map(task => (
                         <li key={task.id}>
                             {task.title} {task.completed ? "✅" : "❌"}
+                            {task.description}
                         </li>
                         
                     ))}
                 </ul>
             )}
-        
-            <button onClick={logout}>Logout</button>
+    
         </div>
     )
 }

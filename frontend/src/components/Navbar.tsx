@@ -7,7 +7,7 @@ export function Navbar() {
         <nav>
             {user && (
                 <>
-                <span>{user.email}</span>
+                <span>{user.username}</span>
                 <button onClick={logout}>Logout</button>
                 </>
             )}

@@ -5,6 +5,7 @@ import type {ReactNode} from "react";
 type User = {
     id: number;
     email: string;
+    username: string;
 };
 
 type AuthContextType = {

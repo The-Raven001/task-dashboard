@@ -41,12 +41,8 @@ class UserLogin(BaseModel):
     email: EmailStr = Field(..., example="useremail@example.com")
     password: str = Field(..., example="12345")
 
-class UserOut(BaseModel):
+class UserOut(UserBase):
     id:int
-    email: EmailStr
-    model_config = {
-        "form_attributes": True
-    }
 
 class Token(BaseModel):
     access_token: str = Field(..., example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnYWNtOTUyMThAZ21haWwuY29tIiwiZXhwIjoxNzY2NzE5NjE1fQ.QtDC5RHSYF5u3QcC_QSHz3fk7n2BBwcZB9J_lEEJQEE")

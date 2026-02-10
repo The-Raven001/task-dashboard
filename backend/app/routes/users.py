@@ -92,7 +92,7 @@ def login(user_credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     if not verify(user_credentials.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
-    access_token = create_access_token({"sub": user.email})
+    access_token = create_access_token({"sub": str(user.id)})
 
     return {"access_token": access_token, "token_type": "bearer"}
 
