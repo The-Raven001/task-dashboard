@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { TaskModal } from "../components/TaskModal";
+import { Trash2, Pencil} from "lucide-react";
 
 type Task = {
     id: number;
@@ -63,6 +64,52 @@ export function Dashboard(){
         setTasks(prev => [...prev, newTask]);
     }
 
+    async function updateTask(id: number) {
+
+        const token = localStorage.getItem("token");
+
+        if (!token) return;
+        
+        const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ id })
+        })
+
+        if(!response.ok){
+            throw new Error("Failed to update task");
+        }
+        const updatedTask = await response.json();
+        setTasks(prev => [...prev, updatedTask])
+    }
+
+
+    async function deleteTask(id: number){
+
+        const token = localStorage.getItem("token");
+
+        if(!token) return;
+
+        const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ id })
+        })
+        
+        if (!response.ok){
+            throw new Error("Failed to delete task");
+        }
+        setTasks(prev => prev.filter(task => task.id !==id))
+    }
+
+
+
 
     return (
         <div>
@@ -86,9 +133,12 @@ export function Dashboard(){
             {!loading && tasks.length > 0 && (
                 <ul>
                     {tasks.map(task => (
-                        <li key={task.id}>
-                            {task.title} {task.completed ? "✅" : "❌"}
+                        <li key={task.id} className="flex flex-row">
+                            {task.title} {task.completed ? "✅" : "❌"} 
+                            
                             {task.description}
+                            <button onClick={() => deleteTask(task.id)}><Trash2 size={15} /></button> 
+                            <button><Pencil size={15} /></button>
                         </li>
                         
                     ))}
