@@ -67,13 +67,23 @@ def get_task(id: int,
     summary="Update a task",
     description="Updates the selected tasked owned by the authenticated user.")
 
-def update_item(id: int, updated_task: schemas.TaskUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    task = db.query(models.Task).filter(models.Task.id == id, models.Task.owner_id == current_user.id).first()
+def update_item(
+    id: int, 
+    updated_task: schemas.TaskUpdate, 
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(get_current_user)):
+
+    task = db.query(models.Task).filter(
+        models.Task.id == id, 
+        models.Task.owner_id == current_user.id).first()
+
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    task.title = updated_task.title
-    task.description= updated_task.description
-    task.completed= updated_task.completed
+
+    update_data = updated_task.dict(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(task, key, value)
 
     db.commit()
     db.refresh(task)

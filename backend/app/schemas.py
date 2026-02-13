@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
-from typing import List
+from typing import List, Optional
 
 #Tasks
 
@@ -16,7 +16,9 @@ class Task(TaskBase):
     completed: bool 
 
 class TaskUpdate(TaskBase):
-    completed: bool | None = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    completed: Optional[bool] = None
     
     class Config:
         orm_mode = True
