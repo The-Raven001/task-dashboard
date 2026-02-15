@@ -1,15 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type Task = {
+    id: number; 
+    title: string;
+    description: string;
+    completed: boolean;
+};
 
 type TaskModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    onCreate: (title: string, description: string) => Promise<void>;
+    onSubmit: (task: { id?: number; title: string; description: string; completed?: boolean }) => Promise<void>;
+    mode: "create" | "edit";
+    task?: Task | null;
 };
 
-export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
+export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalProps) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (mode === "edit" && task){
+            setTitle(task.title);
+            setDescription(task.description)
+        } else {
+            setTitle("");
+            setDescription("")
+        }
+    }, [mode, task, isOpen]);
 
     if (!isOpen) return null;
 
@@ -17,13 +36,18 @@ export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
         event.preventDefault();
         setLoading(true);
 
-        await onCreate(title, description);
+        await onSubmit({
+            id: task?.id,
+            title,
+            description,
+            completed: task?.completed ?? false
+        });
 
-        setTitle("");
-        setDescription("")
         setLoading(false);
         onClose();
-    }
+}
+
+    const isEdit = mode === "edit";
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
@@ -63,7 +87,13 @@ export function TaskModal({ isOpen, onClose, onCreate }: TaskModalProps) {
                     disabled={loading}
                     className="px-3 py-1 bg-black text-white"
                     >
-                        {loading ? "Creating..." : "Create"}
+                        {loading 
+                            ? isEdit
+                               ? "Updating..."
+                               : "Creating..."
+                            : isEdit
+                            ? "Update"
+                            : "Create"}
                     </button>
                 </div>
                 </form>

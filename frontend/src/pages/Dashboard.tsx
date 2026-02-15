@@ -16,9 +16,10 @@ export function Dashboard(){
     const [ tasks, setTasks ] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTask, setEditingTask] = useState<Task | null>(null);
 
     useEffect (() => {
-        loadTasks()}, [])
+        loadTasks()}, [user])
 
     async function loadTasks() {
         const token = localStorage.getItem("token");
@@ -43,9 +44,26 @@ export function Dashboard(){
         }    
     }
 
-    async function createTask(title: string, description: string) {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+async function createTask(task: { id?: number; title: string; description: string; completed?: boolean }) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    /* Edit portion */
+    if (task.id) {
+  
+        const response = await fetch(`http://localhost:8000/tasks/${task.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(task),
+        });
+        const updatedTask = await response.json();
+
+        setTasks(prev => prev.map(t => t.id === editingTask?.id ? {...t, ...updatedTask} : t))
+        setEditingTask(null)
+
+    } else {
 
         const response = await fetch("http://localhost:8000/tasks", {
             method: "POST",
@@ -53,39 +71,14 @@ export function Dashboard(){
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ title, description }),
+            body: JSON.stringify(task),
         });
-
-        if (!response.ok){
-            throw new Error("Failed to create task");
-        }
-
         const newTask = await response.json();
+
+   
         setTasks(prev => [...prev, newTask]);
     }
-
-    async function updateTask(id: number) {
-
-        const token = localStorage.getItem("token");
-
-        if (!token) return;
-        
-        const response = await fetch(`http://localhost:8000/tasks/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ id })
-        })
-
-        if(!response.ok){
-            throw new Error("Failed to update task");
-        }
-        const updatedTask = await response.json();
-        setTasks(prev => [...prev, updatedTask])
-    }
-
+}
 
     async function deleteTask(id: number){
 
@@ -116,14 +109,21 @@ export function Dashboard(){
             <h1 className="flex justify-center mb-5">Dashboard</h1>
             <p>Welcome {user?.email}</p>
 
-            <button onClick={() => setIsModalOpen(true)}>
+            <button onClick={() => 
+                {setEditingTask(null);
+                setIsModalOpen(true)}}>
                 ➕ New Task
             </button>
 
-            < TaskModal 
+            <TaskModal 
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onCreate={createTask}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditingTask(null); 
+                }}
+                onSubmit={(task) => createTask(task)} 
+                mode={editingTask ? "edit" : "create"}
+                task={editingTask}
             />
 
             {loading && <p>Loading tasks...</p>}
@@ -138,7 +138,10 @@ export function Dashboard(){
                             
                             {task.description}
                             <button onClick={() => deleteTask(task.id)}><Trash2 size={15} /></button> 
-                            <button><Pencil size={15} /></button>
+                            <button onClick={() => {
+                                setEditingTask(task);
+                                setIsModalOpen(true)
+                            }}><Pencil size={15} /></button>
                         </li>
                         
                     ))}
@@ -148,3 +151,10 @@ export function Dashboard(){
         </div>
     )
 }
+
+/* 
+
+
+                            
+
+*/
