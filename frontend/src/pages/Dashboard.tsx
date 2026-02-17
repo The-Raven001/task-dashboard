@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { TaskModal } from "../components/TaskModal";
-import { Trash2, Pencil} from "lucide-react";
+import { Trash2, Pencil, Plus} from "lucide-react";
 
 type Task = {
     id: number;
@@ -80,6 +80,24 @@ async function createTask(task: { id?: number; title: string; description: strin
     }
 }
 
+async function updateTaskState(task: {id: number; completed: boolean}) {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+ 
+        const response = await fetch(`http://localhost:8000/tasks/${task.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({completed: !task.completed}),
+        
+        })
+        const updatedTask = await response.json();
+        setTasks(prev => prev.map(t=> t.id === task.id ? {...t, ...updatedTask} : t))
+    }
+
     async function deleteTask(id: number){
 
         const token = localStorage.getItem("token");
@@ -111,8 +129,8 @@ async function createTask(task: { id?: number; title: string; description: strin
 
             <button onClick={() => 
                 {setEditingTask(null);
-                setIsModalOpen(true)}}>
-                ➕ New Task
+                setIsModalOpen(true)}} className="flex items-stretch">
+                <Plus /> New Task
             </button>
 
             <TaskModal 
@@ -134,14 +152,16 @@ async function createTask(task: { id?: number; title: string; description: strin
                 <ul>
                     {tasks.map(task => (
                         <li key={task.id} className="flex flex-row">
-                            {task.title} {task.completed ? "✅" : "❌"} 
                             
+                            <strong>{task.title} </strong>
+                            <button onClick={() => updateTaskState(task)}>{task.completed ? "✅" : "❌"}</button> 
                             {task.description}
-                            <button onClick={() => deleteTask(task.id)}><Trash2 size={15} /></button> 
+                           
                             <button onClick={() => {
                                 setEditingTask(task);
                                 setIsModalOpen(true)
                             }}><Pencil size={15} /></button>
+                             <button onClick={() => deleteTask(task.id)}><Trash2 size={15} /></button> 
                         </li>
                         
                     ))}
