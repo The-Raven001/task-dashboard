@@ -41,7 +41,7 @@ def create_task(
     description="Retrieves all tasks owned by the authenticated user.")
 def get_tasks(db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)):
-    return db.query(models.Task).filter(models.Task.owner_id == current_user.id).all()
+    return db.query(models.Task).filter(models.Task.owner_id == current_user.id).order_by(models.Task.id.asc()).all()
 
 @router.get("/{id}", 
     response_model=schemas.TaskBase,

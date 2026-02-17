@@ -22,7 +22,7 @@ export function Register() {
         setError(null)
 
         try{
-        const response = await fetch("http://localhost:8000/users/", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

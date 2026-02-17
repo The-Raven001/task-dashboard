@@ -29,7 +29,7 @@ export function AuthProvider({children}: { children: ReactNode }) {
 
     const login = async (email: string, password: string) => {
 
-        const response = await fetch("http://localhost:8000/auth/login", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export function AuthProvider({children}: { children: ReactNode }) {
             return
         }
 
-        const response = await fetch("http://localhost:8000/auth/me",
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`,
             {headers: {
                 Authorization: `Bearer ${token}`,
             }}

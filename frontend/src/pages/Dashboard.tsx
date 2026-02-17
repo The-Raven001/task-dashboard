@@ -27,7 +27,7 @@ export function Dashboard(){
          if (!token) return;
         
         try {
-            const response = await fetch("http://localhost:8000/tasks", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -50,7 +50,7 @@ async function createTask(task: { id?: number; title: string; description: strin
     /* Edit portion */
     if (task.id) {
   
-        const response = await fetch(`http://localhost:8000/tasks/${task.id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${task.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -65,7 +65,7 @@ async function createTask(task: { id?: number; title: string; description: strin
 
     } else {
 
-        const response = await fetch("http://localhost:8000/tasks", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -85,7 +85,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 
     if (!token) return;
  
-        const response = await fetch(`http://localhost:8000/tasks/${task.id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${task.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -104,7 +104,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 
         if(!token) return;
 
-        const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
