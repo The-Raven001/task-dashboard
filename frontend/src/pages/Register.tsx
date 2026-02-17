@@ -37,9 +37,6 @@ export function Register() {
         if (!response.ok){
             throw new Error("Failed to register")
         }
-
-        console.log("USER CREATED!")
-
         window.location.href = "/login"
 
     } catch (err){

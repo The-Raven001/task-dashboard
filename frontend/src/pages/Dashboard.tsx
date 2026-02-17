@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { TaskModal } from "../components/TaskModal";
 import { Trash2, Pencil, Plus} from "lucide-react";
+import toast from "react-hot-toast";
 
 type Task = {
     id: number;
@@ -33,6 +34,7 @@ export function Dashboard(){
                 }
             })
         if(!response.ok){
+            toast.error("Something went wrong");
             throw new Error("Failed to fetch tasks");
         }
         const data = await response.json()
@@ -47,7 +49,7 @@ export function Dashboard(){
 async function createTask(task: { id?: number; title: string; description: string; completed?: boolean }) {
     const token = localStorage.getItem("token");
     if (!token) return;
-    /* Edit portion */
+    /* Edit task*/
     if (task.id) {
   
         const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/${task.id}`, {
@@ -60,11 +62,12 @@ async function createTask(task: { id?: number; title: string; description: strin
         });
         const updatedTask = await response.json();
 
+        toast.success("Task edited successfully")
         setTasks(prev => prev.map(t => t.id === editingTask?.id ? {...t, ...updatedTask} : t))
         setEditingTask(null)
 
     } else {
-
+    /* Create task */
         const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`, {
             method: "POST",
             headers: {
@@ -75,7 +78,7 @@ async function createTask(task: { id?: number; title: string; description: strin
         });
         const newTask = await response.json();
 
-   
+        toast.success("Task created successfully")
         setTasks(prev => [...prev, newTask]);
     }
 }
@@ -95,6 +98,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
         
         })
         const updatedTask = await response.json();
+        toast.success(task.completed ? "Marked incomplete": "Marked complete")
         setTasks(prev => prev.map(t=> t.id === task.id ? {...t, ...updatedTask} : t))
     }
 
@@ -114,8 +118,10 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
         })
         
         if (!response.ok){
+            toast.error("Something went wrong");
             throw new Error("Failed to delete task");
         }
+        toast.success("Task deleted successfully")
         setTasks(prev => prev.filter(task => task.id !==id))
     }
 

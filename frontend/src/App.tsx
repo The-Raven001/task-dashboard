@@ -6,13 +6,18 @@ import { Register } from "./pages/Register";
 import { Landing } from "./pages/Landing";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PublicLayout from "./layouts/PublicLayout";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
+    <>
+    <Toaster position="bottom-right" />
       <Routes>
 
         {/* Public routes */}
         <Route element={<PublicLayout />}> 
+
+          
           <Route 
           path="/login" 
           element={<Login />} />
@@ -35,6 +40,7 @@ function App() {
         </Route>
 
       </Routes>
+      </>
   )
 }
 

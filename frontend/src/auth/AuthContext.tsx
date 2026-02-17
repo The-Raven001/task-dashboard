@@ -11,7 +11,7 @@ type User = {
 type AuthContextType = {
     user: User | null;
     isAuthenticated: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
     loading: boolean;
 };
@@ -29,7 +29,8 @@ export function AuthProvider({children}: { children: ReactNode }) {
 
     const login = async (email: string, password: string) => {
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,6 +47,11 @@ export function AuthProvider({children}: { children: ReactNode }) {
         localStorage.setItem("token", data.access_token)
 
         await fetchCurrentUser();
+        return true
+        } catch (error){
+            return false
+        }
+
     };
 
 
