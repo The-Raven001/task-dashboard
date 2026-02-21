@@ -129,13 +129,13 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 
 
     return (
-        <div>
-            <h1 className="flex justify-center mb-5">Dashboard</h1>
+        <div className="p-6 min-h-screen">
+            <h1 className="flex justify-center mb-5 font-bold mb-6 text-2xl">Dashboard</h1>
             <p>Welcome {user?.email}</p>
 
             <button onClick={() => 
                 {setEditingTask(null);
-                setIsModalOpen(true)}} className="flex items-stretch">
+                setIsModalOpen(true)}} className="text-white flex  items-stretch gap-6 my-2 text-black">
                 <Plus /> New Task
             </button>
 
@@ -155,25 +155,28 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
             {!loading && tasks.length === 0 && <p>No tasks yet</p>}
 
             {!loading && tasks.length > 0 && (
-                <ul>
+                <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {tasks.map(task => (
-                        <li key={task.id} className="flex flex-row">
+                        <li key={task.id} className="text-black bg-gray-300 p-6 rounded-3xl">
                             
                             <strong>{task.title} </strong>
+                            
+                            <div className="p-2">
+                                {task.description}
+                            </div>
+                           <div className="flex flex-raw gap-2">
                             <button onClick={() => updateTaskState(task)}>{task.completed ? "✅" : "❌"}</button> 
-                            {task.description}
-                           
                             <button onClick={() => {
                                 setEditingTask(task);
                                 setIsModalOpen(true)
-                            }}><Pencil size={15} /></button>
-                             <button onClick={() => deleteTask(task.id)}><Trash2 size={15} /></button> 
+                            }}><Pencil className="text-white"size={15} /></button>
+                             <button onClick={() => deleteTask(task.id)}><Trash2 className="text-white" size={15} /></button> 
+                           </div>
                         </li>
                         
                     ))}
                 </ul>
-            )}
-    
+            )} 
         </div>
     )
 }
