@@ -3,6 +3,7 @@ import { useAuth } from "../auth/AuthContext";
 import { TaskModal } from "../components/TaskModal";
 import { Trash2, Pencil, Plus} from "lucide-react";
 import toast from "react-hot-toast";
+import { Card } from "../layouts/Card";
 
 type Task = {
     id: number;
@@ -158,22 +159,26 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {tasks.map(task => (
                         <li key={task.id} className="text-black bg-gray-300 p-6 rounded-3xl">
-                            
-                            <strong>{task.title} </strong>
-                            
-                            <div className="p-2">
-                                {task.description}
-                            </div>
-                           <div className="flex flex-raw gap-2">
-                            <button onClick={() => updateTaskState(task)}>{task.completed ? "✅" : "❌"}</button> 
-                            <button onClick={() => {
-                                setEditingTask(task);
-                                setIsModalOpen(true)
-                            }}><Pencil className="text-white"size={15} /></button>
-                             <button onClick={() => deleteTask(task.id)}><Trash2 className="text-white" size={15} /></button> 
-                           </div>
+                            <Card>
+                                <div className="flex justify-between items-start">
+                                    <strong className="text-lg">{task.title}</strong>
+                                    <button onClick={() => updateTaskState(task)}>{task.completed ? "✅" : "❌"}</button> 
+                                </div>
+                                <p className="p-2">
+                                    {task.description}
+                                </p>
+                                <div className="flex gap-3 mt-4">
+                                     <button onClick={() => {
+                                    setEditingTask(task);
+                                    setIsModalOpen(true)
+                                }}
+                                className="text-blue-500 hover:text-blue-700 transition"
+                                ><Pencil className="text-white"size={16} /></button>
+                                <button onClick={() => deleteTask(task.id)}><Trash2 className="text-red-500 hover:text-red-700 transition" size={16} /></button> 
+                                </div>
+                                
+                           </Card>
                         </li>
-                        
                     ))}
                 </ul>
             )} 
@@ -182,8 +187,5 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 }
 
 /* 
-
-
-                            
 
 */
