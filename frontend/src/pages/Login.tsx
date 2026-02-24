@@ -38,7 +38,7 @@ export function Login() {
 
     return (
         <div className="flex flex-col items-center mt-20">
-            <h1 className="text-2x1 mb-6">Login</h1>
+            <h1 className="text-2xl mb-6">Login</h1>
             <form onSubmit={handleSubmit}
             className="flex flex-col gap-4 w-80"
             >

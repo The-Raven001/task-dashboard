@@ -49,26 +49,33 @@ export function Register() {
     
 
     return (
-        <div>
-            <h1>User register</h1>
+        <div className="flex flex-col items-center mt-20">
+            <h1 className="text-2xl mb-6">User register</h1>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}
+            className="flex flex-col gap-4 w-80">
 
                 <input type="text"
                 placeholder="username"
                 value={username}
-                onChange={(event) => setUsername(event.target.value)} />
+                onChange={(event) => setUsername(event.target.value)}
+                className="border p-2 rounded"
+                required />
 
                 <input 
                 type="email"
                 placeholder="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)} />
+                onChange={(event) => setEmail(event.target.value)}
+                className="border p-2 rounded"
+                required />
 
                 <input type="password"
                 placeholder="password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)} />
+                onChange={(event) => setPassword(event.target.value)}
+                className="border p-2 rounded"
+                required />
                 
                 <button type="submit" disabled={loading}
                 >{loading ? "Creating account..." : "Register"}</button>
