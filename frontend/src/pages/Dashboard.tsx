@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { TaskModal } from "../components/TaskModal";
-import { Trash2, Pencil, Plus} from "lucide-react";
+import { Trash2, Pencil, Plus, Check, X} from "lucide-react";
 import toast from "react-hot-toast";
 import { Card } from "../layouts/Card";
 
@@ -132,13 +132,15 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
     return (
         <div className="p-6 min-h-screen">
             <h1 className="flex justify-center mb-5 font-bold mb-6 text-2xl">Dashboard</h1>
-            <p>Welcome {user?.email}</p>
+            <div className="flex items-center justify-between">
+                <p>Welcome {user?.email}</p>
 
             <button onClick={() => 
                 {setEditingTask(null);
                 setIsModalOpen(true)}} className="text-white flex  items-stretch gap-6 my-2 text-black">
                 <Plus /> New Task
             </button>
+            </div>
 
             <TaskModal 
                 isOpen={isModalOpen}
@@ -156,13 +158,22 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
             {!loading && tasks.length === 0 && <p>No tasks yet</p>}
 
             {!loading && tasks.length > 0 && (
-                <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <div className="bg-zinc-600 rounded-3xl p-7 pt-3">
+                    <h2 className="font-bold text-2xl pb-4">Tasks:</h2>
+                    <ul className="grid 
+                            grid-cols-1 
+                            sm:grid-cols-2
+                            lg:grid-cols-3
+                            xl:grid-cols-4 
+                            gap-6">
+                                
                     {tasks.map(task => (
-                        <li key={task.id} className="text-black bg-gray-300 p-6 rounded-3xl">
+                        <li key={task.id} className="text-black bg-gray-300 p-3 rounded-3xl">
                             <Card>
                                 <div className="flex justify-between items-start">
                                     <strong className="text-lg">{task.title}</strong>
-                                    <button onClick={() => updateTaskState(task)}>{task.completed ? "✅" : "❌"}</button> 
+                                    <button className="p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
                                 </div>
                                 <p className="p-2">
                                     {task.description}
@@ -172,15 +183,16 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                                     setEditingTask(task);
                                     setIsModalOpen(true)
                                 }}
-                                className="text-blue-500 hover:text-blue-700 transition"
-                                ><Pencil className="text-white"size={16} /></button>
-                                <button onClick={() => deleteTask(task.id)}><Trash2 className="text-red-500 hover:text-red-700 transition" size={16} /></button> 
+                                className="text-blue-500 hover:text-blue-900 transition"
+                                ><Pencil className="text-white hover:text-blue-500"size={16} /></button>
+                                <button onClick={() => deleteTask(task.id)}><Trash2 className="text-red-500 hover:text-red-900 transition" size={16} /></button> 
                                 </div>
                                 
                            </Card>
                         </li>
                     ))}
                 </ul>
+                </div>
             )} 
         </div>
     )
