@@ -130,14 +130,22 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 
 
     return (
-        <div className="p-6 min-h-screen">
-            <h1 className="flex justify-center mb-5 font-bold mb-6 text-2xl">Dashboard</h1>
+        <div className="min-h-screen bg-neutral-950 text-white px-4 sm:px-6 lg:px-12 py-8 rounded-3xl">
+            <h1 className="text-4xl font-extrabold tracking-light flex justify-center">Dashboard</h1>
+
             <div className="flex items-center justify-between">
                 <p>Welcome {user?.email}</p>
 
             <button onClick={() => 
                 {setEditingTask(null);
-                setIsModalOpen(true)}} className="text-white flex  items-stretch gap-6 my-2 text-black">
+                setIsModalOpen(true)}} 
+                className="
+                    text-white 
+                    flex  
+                    items-stretch 
+                    gap-6 
+                    my-2 
+                    text-black">
                 <Plus /> New Task
             </button>
             </div>
@@ -161,7 +169,8 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 
                 <div className="bg-zinc-600 rounded-3xl p-7 pt-3">
                     <h2 className="font-bold text-2xl pb-4">Tasks:</h2>
-                    <ul className="grid 
+                    <ul className="
+                            grid 
                             grid-cols-1 
                             sm:grid-cols-2
                             lg:grid-cols-3
@@ -169,13 +178,21 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                             gap-6">
                                 
                     {tasks.map(task => (
-                        <li key={task.id} className="text-black bg-gray-300 p-3 rounded-3xl">
+                        <li key={task.id} 
+                            className="
+                                bg-neutral-900
+                                border border-neutral-800
+                                p-6
+                                rounded-2xl
+                                hover:border-neutral-600
+                                transition
+                                ">
                             <Card>
                                 <div className="flex justify-between items-start">
-                                    <strong className="text-lg">{task.title}</strong>
+                                    <h3 className="text-lg font-semibold tracking-tight">{task.title}</h3>
                                     <button className="p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
                                 </div>
-                                <p className="p-2">
+                                <p className="text-neutral-400 mt-3 text-sm leading-relaxed">
                                     {task.description}
                                 </p>
                                 <div className="flex gap-3 mt-4">

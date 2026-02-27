@@ -5,7 +5,17 @@ type CardProps = {
 
 export function Card({children, className = ""}: CardProps) {
     return (
-        <div className={`bg-white p-6 rounded-2xl shadow-sn hover:shadow-md transition duration-200 ${className}`}>
+        <div className={`
+                bg-neutral-900 
+                border border-neutral-800
+                p-6 
+                rounded-2xl 
+                shadow-sm
+                hover:shadow-lg
+                hover:border-neutral-700
+                transition-all
+                duration-300 
+                ${className}`}>
             {children} 
         </div>
     )
