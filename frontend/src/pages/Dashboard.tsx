@@ -167,7 +167,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 
             {!loading && tasks.length > 0 && (
                 
-                <div className="bg-zinc-600 rounded-3xl p-7 pt-3">
+                <div className="bg-zinc-800 rounded-3xl p-7 pt-3">
                     <h2 className="font-bold text-2xl pb-4">Tasks:</h2>
                     <ul className="
                             grid 
@@ -179,14 +179,14 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                                 
                     {tasks.map(task => (
                         <li key={task.id} 
-                            className="
+                            className={`
                                 bg-neutral-900
-                                border border-neutral-800
+                                border
                                 p-6
                                 rounded-2xl
-                                hover:border-neutral-600
                                 transition
-                                ">
+                                ${task.completed ? "border-green-500/40 bg-green-500/5" : "border-neutral-800 hover:border-neutral-600"}
+                                `}>
                             <Card>
                                 <div className="flex justify-between items-start">
                                     <h3 className="text-lg font-semibold tracking-tight">{task.title}</h3>

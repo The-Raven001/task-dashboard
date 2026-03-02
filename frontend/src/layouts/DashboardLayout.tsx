@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer"
 import PageContainer from "./PageContainer";
 
 export default function DashboardLayout() {
@@ -9,6 +10,7 @@ export default function DashboardLayout() {
         <PageContainer>
             <Outlet />
         </PageContainer>
+        <Footer />
         </>
     );
 }
