@@ -19,6 +19,7 @@ export function Dashboard(){
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect (() => {
         loadTasks()}, [user])
@@ -126,7 +127,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
         setTasks(prev => prev.filter(task => task.id !==id))
     }
 
-
+    const filteredTasks = tasks.filter(task => task.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
 
     return (
@@ -163,21 +164,45 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
 
             {loading && <p>Loading tasks...</p>}
 
-            {!loading && tasks.length === 0 && <p>No tasks yet</p>}
+            {!loading && tasks.length === 0 && <p className="text-neutral-500 mt-4">No tasks yet</p>}
 
             {!loading && tasks.length > 0 && (
                 
                 <div className="bg-zinc-800 rounded-3xl p-7 pt-3">
                     <h2 className="font-bold text-2xl pb-4">Tasks:</h2>
+
+                    <div className="mb-6">
+                        <input 
+                            type="text"
+                            placeholder="Search tasks..."
+                            value={searchTerm}
+                            onChange={(event) => setSearchTerm(event.target.value)}
+                            className="
+                            w-full
+                            bg-neutral-900
+                            border border-neutral-700
+                            rounded-xl
+                            px-4 py-2
+                            text-white
+                            placeholder-neutral-500
+                            focus:outline-none
+                            focus:border-white
+                            transition
+                            " 
+                        />
+                    </div>
+
+                    {filteredTasks.length === 0 ? (
+                        <p className="text-neutral-500 mt-4">No tasks match your search.</p>
+                    ) : (
                     <ul className="
                             grid 
                             grid-cols-1 
                             sm:grid-cols-2
                             lg:grid-cols-3
                             xl:grid-cols-4 
-                            gap-6">
-                                
-                    {tasks.map(task => (
+                            gap-6">    
+                    {filteredTasks.map(task => (
                         <li key={task.id} 
                             className={`
                                 bg-neutral-900
@@ -209,6 +234,8 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                         </li>
                     ))}
                 </ul>
+            )}
+                
                 </div>
             )} 
         </div>
