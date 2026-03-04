@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import List, Optional
+from datetime import datetime
 
 #Tasks
 
@@ -14,6 +15,7 @@ class TaskCreate(TaskBase):
 class Task(TaskBase):
     id: int
     completed: bool 
+    created_at: datetime
 
 class TaskUpdate(TaskBase):
     title: Optional[str] = None

@@ -10,6 +10,7 @@ type Task = {
     title: string;
     description: string;
     completed: boolean;
+    createdAt: string;
     };
 
 export function Dashboard(){
@@ -20,6 +21,8 @@ export function Dashboard(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortBy, setSortBy] = useState("newest");
+
 
     useEffect (() => {
         loadTasks()}, [user])
@@ -127,9 +130,17 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
         setTasks(prev => prev.filter(task => task.id !==id))
     }
 
+    // Filter
     const filteredTasks = tasks.filter(task => task.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
-
+    // Date formatter
+    const formatDate = (date: string | Date): string => {
+        return new Date(date).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        });
+    }
     return (
         <div className="min-h-screen bg-neutral-950 text-white px-4 sm:px-6 lg:px-12 py-8 rounded-3xl">
             <h1 className="text-4xl font-extrabold tracking-light flex justify-center">Dashboard</h1>
@@ -187,7 +198,9 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                             placeholder-neutral-500
                             focus:outline-none
                             focus:border-white
-                            transition
+                            transition-all duration-300
+                            hover:-translate-y-1
+                            hover:shadow-xl
                             " 
                         />
                     </div>
@@ -209,25 +222,30 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                                 border
                                 p-6
                                 rounded-2xl
-                                transition
+                                transition-all duration-300
+                                hover:-translate-y-1
+                                hover:shadow-xl
                                 ${task.completed ? "border-green-500/40 bg-green-500/5" : "border-neutral-800 hover:border-neutral-600"}
                                 `}>
                             <Card>
                                 <div className="flex justify-between items-start">
                                     <h3 className="text-lg font-semibold tracking-tight">{task.title}</h3>
-                                    <button className="p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
+                                    <button className="hover:scale-110 active:scale-95 transition p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
                                 </div>
                                 <p className="text-neutral-400 mt-3 text-sm leading-relaxed">
                                     {task.description}
+                                </p>
+                                <p className="text-xs text-neutral-500 mt-4">
+                                    Created {formatDate(task.createdAt)}
                                 </p>
                                 <div className="flex gap-3 mt-4">
                                      <button onClick={() => {
                                     setEditingTask(task);
                                     setIsModalOpen(true)
                                 }}
-                                className="text-blue-500 hover:text-blue-900 transition"
+                                className="text-blue-500 hover:text-blue-900 hover:scale-110 active:scale-95 transition"
                                 ><Pencil className="text-white hover:text-blue-500"size={16} /></button>
-                                <button onClick={() => deleteTask(task.id)}><Trash2 className="text-red-500 hover:text-red-900 transition" size={16} /></button> 
+                                <button onClick={() => deleteTask(task.id)} className="transition hover:scale-110 active:scale-95"><Trash2 className="text-red-500 hover:text-red-900 transition" size={16} /></button> 
                                 </div>
                                 
                            </Card>

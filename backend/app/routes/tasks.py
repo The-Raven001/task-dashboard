@@ -63,7 +63,7 @@ def get_task(id: int,
 #Update task
 
 @router.put("/{id}", 
-    response_model=schemas.TaskUpdate,
+    response_model=schemas.Task,
     summary="Update a task",
     description="Updates the selected tasked owned by the authenticated user.")
 
