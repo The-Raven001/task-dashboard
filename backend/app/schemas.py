@@ -6,7 +6,7 @@ from datetime import datetime
 
 class TaskBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=100, example="Cook for mom")
-    description:  str | None = Field(None, max_length=255, example="Make pasta and salad")
+    description:  str | None = Field(None, max_length=2000, example="Make pasta and salad")
     
 
 class TaskCreate(TaskBase):

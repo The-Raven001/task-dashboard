@@ -10,7 +10,7 @@ type Task = {
     title: string;
     description: string;
     completed: boolean;
-    createdAt: string;
+    created_at: string;
     };
 
 export function Dashboard(){
@@ -22,6 +22,7 @@ export function Dashboard(){
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState("newest");
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null)
 
 
     useEffect (() => {
@@ -181,15 +182,15 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 
                 <div className="bg-zinc-800 rounded-3xl p-7 pt-3">
                     <h2 className="font-bold text-2xl pb-4">Tasks:</h2>
-
-                    <div className="mb-6">
+                    
+                    <div className="flex justify-between mb-6">
                         <input 
                             type="text"
                             placeholder="Search tasks..."
                             value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
                             className="
-                            w-full
+                            w-md
                             bg-neutral-900
                             border border-neutral-700
                             rounded-xl
@@ -203,6 +204,16 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                             hover:shadow-xl
                             " 
                         />
+                        <select
+                            onChange={(event) => setSortBy(event.target.value)}
+                            className="border rounded p-2 text-sm"
+                            >
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="az">A-Z</option>
+                            <option value="completed">Completed</option>
+                            <option value="incomplete">Incomplete</option>
+                        </select>
                     </div>
 
                     {filteredTasks.length === 0 ? (
@@ -214,7 +225,8 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                             sm:grid-cols-2
                             lg:grid-cols-3
                             xl:grid-cols-4 
-                            gap-6">    
+                            gap-6
+                            ">    
                     {filteredTasks.map(task => (
                         <li key={task.id} 
                             className={`
@@ -232,11 +244,18 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                                     <h3 className="text-lg font-semibold tracking-tight">{task.title}</h3>
                                     <button className="hover:scale-110 active:scale-95 transition p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
                                 </div>
-                                <p className="text-neutral-400 mt-3 text-sm leading-relaxed">
+                                <p className="text-neutral-400 mt-3 text-sm leading-relaxed line-clamp-4 ">
                                     {task.description}
                                 </p>
+                                {task.description.length > 180 && (
+                                    <button 
+                                        onClick={() => setSelectedTask(task)}
+                                        className="text-sm text-white hover:underline mt-1"
+                                    >
+                                        Show more
+                                    </button>)}
                                 <p className="text-xs text-neutral-500 mt-4">
-                                    Created {formatDate(task.createdAt)}
+                                    Created {formatDate(task.created_at)}
                                 </p>
                                 <div className="flex gap-3 mt-4">
                                      <button onClick={() => {
@@ -256,6 +275,26 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 
                 </div>
             )} 
+            {selectedTask && (
+                <div 
+                    className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black-40 z-50"
+                    onClick={() => setSelectedTask(null)}
+                    >
+                        <div
+                            className=""
+                            onClick={(event) => event.stopPropagation()}
+                            >
+                            <h2 className="text-xl font-bold mb-3">{selectedTask.title}</h2>
+                            <p className="text-neutral-300 whitespace-pre-wrap max-h-[300px} overflow-y-auto">{selectedTask.description}</p>
+                        </div>
+                        <button
+                            onClick={() => setSelectedTask(null)}
+                            className="mt-6 text-sm text-neutral-400 hover:text-white"
+                        >
+                        Close
+                        </button>
+                </div>
+            )}
         </div>
     )
 }

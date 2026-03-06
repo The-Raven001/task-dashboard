@@ -59,6 +59,7 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
                     <input 
                     className="w-full border p-2 mb-4"
                     placeholder="Task title"
+                    maxLength={250}
                     value={title}
                     onChange={event => setTitle(event.target.value)}
                     required
@@ -68,6 +69,7 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
                     <textarea
                     className="w-full border p-2 mb-4 h-32 resize-none"
                     placeholder="Task description"
+                    maxLength={1500}
                     value={description}
                     onChange={event => setDescription(event.target.value)}
                     required
