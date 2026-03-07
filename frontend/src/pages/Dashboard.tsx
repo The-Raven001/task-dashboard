@@ -276,26 +276,36 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 </div>
             )} 
             {selectedTask && (
-                <div 
-                    className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black-40 z-50"
-                    onClick={() => setSelectedTask(null)}
-                    >
-                        <div
-                            className=""
-                            onClick={(event) => event.stopPropagation()}
-                            >
-                            <h2 className="text-xl font-bold mb-3">{selectedTask.title}</h2>
-                            <p className="text-neutral-300 whitespace-pre-wrap max-h-[300px} overflow-y-auto">{selectedTask.description}</p>
-                        </div>
-                        <button
-                            onClick={() => setSelectedTask(null)}
-                            className="mt-6 text-sm text-neutral-400 hover:text-white"
-                        >
-                        Close
-                        </button>
-                </div>
-            )}
-        </div>
+  <div
+    className="fixed inset-0 flex items-center justify-center backdrop-blur-sm bg-black/40 z-50 p-4"
+    onClick={() => setSelectedTask(null)}
+  >
+    <div
+      className="w-full max-w-lg max-h-[80vh] rounded-xl bg-neutral-900/70 background-blur-md p-6 shadow-xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+    <div>
+        <h2 className="text-xl font-bold mb-4">{selectedTask.title}</h2>
+        <p className="text-xs text-neutral-500 mt-4">Created {formatDate(selectedTask.created_at)}</p>
+    </div>
+      <div className="max-h-[60vh] overflow-y-auto mt-4">
+        <p className="text-sm text-neutral-300 whitespace-pre-wrap break-words">
+          {selectedTask.description}
+        </p>
+      </div>
+
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={() => setSelectedTask(null)}
+          className="px-4 py-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+</div>
     )
 }
 
