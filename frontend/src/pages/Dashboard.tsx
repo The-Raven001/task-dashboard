@@ -156,10 +156,15 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                     text-white 
                     flex  
                     items-stretch 
-                    gap-6 
                     my-2 
-                    text-black">
-                <Plus /> New Task
+                    text-black
+                    flex items-center
+                    gap-2
+                    transition
+                    hover:scale-105
+                    ">
+                <Plus />
+                <span className="hidden sm:inline">New Task</span>
             </button>
             </div>
 
@@ -183,14 +188,14 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 <div className="bg-zinc-800 rounded-3xl p-7 pt-3">
                     <h2 className="font-bold text-2xl pb-4">Tasks:</h2>
                     
-                    <div className="flex justify-between mb-6">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:justify-between mb-6">
                         <input 
                             type="text"
                             placeholder="Search tasks..."
                             value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
                             className="
-                            w-md
+                            w-full sm:w-80
                             bg-neutral-900
                             border border-neutral-700
                             rounded-xl
@@ -241,10 +246,10 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                                 `}>
                             <Card>
                                 <div className="flex justify-between items-start">
-                                    <h3 className="text-lg font-semibold tracking-tight">{task.title}</h3>
+                                    <h3 className="text-lg font-semibold tracking-tight break-words">{task.title}</h3>
                                     <button className="hover:scale-110 active:scale-95 transition p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
                                 </div>
-                                <p className="text-neutral-400 mt-3 text-sm leading-relaxed line-clamp-4 ">
+                                <p className="text-neutral-400 mt-3 text-sm leading-relaxed line-clamp-4 break-words">
                                     {task.description}
                                 </p>
                                 {task.description.length > 180 && (
@@ -281,7 +286,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
     onClick={() => setSelectedTask(null)}
   >
     <div
-      className="w-full max-w-lg max-h-[80vh] rounded-xl bg-neutral-900/70 background-blur-md p-6 shadow-xl"
+      className="w-full max-w-lg max-h-[80vh] rounded-xl bg-neutral-900/70 backdrop-blur-md p-6 shadow-xl"
       onClick={(e) => e.stopPropagation()}
     >
     <div>
