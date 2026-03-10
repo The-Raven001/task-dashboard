@@ -157,11 +157,12 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                     flex  
                     items-stretch 
                     my-2 
-                    text-black
                     flex items-center
                     gap-2
                     transition
                     hover:scale-105
+                    hover:border-indigo-500
+                    focus:border-indigo-500
                     ">
                 <Plus />
                 <span className="hidden sm:inline">New Task</span>
@@ -203,22 +204,37 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                             text-white
                             placeholder-neutral-500
                             focus:outline-none
-                            focus:border-white
+                            focus:border-indigo-500
                             transition-all duration-300
                             hover:-translate-y-1
                             hover:shadow-xl
+                            hover:border-indigo-500
                             " 
                         />
-                        <select
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-neutral-400">Sort</span>
+                            <select
                             onChange={(event) => setSortBy(event.target.value)}
-                            className="border rounded p-2 text-sm"
+                            className="
+                                text-white
+                                transition
+                                rounded-xl
+                                px-4 py-2
+                                border border-neutral-700
+                                hover:border-indigo-500
+                                bg-neutral-900
+                                cursor-pointer
+                                focus:outline-none
+                                focus:border-indigo-500
+                                "
                             >
-                            <option value="newest">Newest</option>
-                            <option value="oldest">Oldest</option>
-                            <option value="az">A-Z</option>
-                            <option value="completed">Completed</option>
-                            <option value="incomplete">Incomplete</option>
+                            <option value="newest" className="text-white">Newest</option>
+                            <option value="oldest" className="text-white">Oldest</option>
+                            <option value="az" className="text-white">Title A-Z</option>
+                            <option value="completed" className="text-white">Completed</option>
+                            <option value="incomplete" className="text-white">Incompleted</option>
                         </select>
+                        </div>
                     </div>
 
                     {filteredTasks.length === 0 ? (
@@ -286,7 +302,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
     onClick={() => setSelectedTask(null)}
   >
     <div
-      className="w-full max-w-lg max-h-[80vh] rounded-xl bg-neutral-900/70 backdrop-blur-md p-6 shadow-xl"
+      className="w-full max-w-lg max-h-[80vh] rounded-xl bg-neutral-800/50 backdrop-blur-md p-6 shadow-xl"
       onClick={(e) => e.stopPropagation()}
     >
     <div>

@@ -50,15 +50,15 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
     const isEdit = mode === "edit";
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-            <div className="bg-zinc-700 p-6 rounded w-96">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center backdrop-blur-md">
+            <div className="bg-neutral-800/50 p-6 rounded-2xl w-96">
                 <h2 className="text-lg font-bold mb-4">
                     New Task
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <input 
-                    className="w-full border p-2 mb-4"
-                    placeholder="Task title"
+                    className="w-full border p-2 mb-4 rounded-xl focus:outline-none focus:border-indigo-500 hover:border-indigo-500 transition"
+                    placeholder="Task Title"
                     maxLength={250}
                     value={title}
                     onChange={event => setTitle(event.target.value)}
@@ -67,7 +67,7 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
 
 
                     <textarea
-                    className="w-full border p-2 mb-4 h-32 resize-none"
+                    className="w-full border p-2 mb-4 h-32 resize-none rounded-xl focus:outline-none focus:border-indigo-500 hover:border-indigo-500 transition"
                     placeholder="Task description"
                     maxLength={1500}
                     value={description}
