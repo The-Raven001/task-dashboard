@@ -13,6 +13,8 @@ type Task = {
     created_at: string;
     };
 
+type SortOption = "newest" | "oldest" | "az" | "completed" | "incomplete";
+
 export function Dashboard(){
     const { user, logout } = useAuth();
 
@@ -21,7 +23,7 @@ export function Dashboard(){
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortBy, setSortBy] = useState("newest");
+    const [sortBy, setSortBy] = useState<SortOption>("newest");
     const [selectedTask, setSelectedTask] = useState<Task | null>(null)
 
 
@@ -131,7 +133,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
         setTasks(prev => prev.filter(task => task.id !==id))
     }
 
-    // Filter
+    // Task filtering
     const filteredTasks = tasks.filter(task => task.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
     // Date formatter
@@ -142,6 +144,39 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
             year: "numeric"
         });
     }
+    // Task sorting
+
+    const sortedTasks = [...filteredTasks].sort((a, b) => {
+
+        if(sortBy === "newest") {
+            const dateA = new Date(a.created_at).getTime();
+            const dateB = new Date(b.created_at).getTime();
+
+            return dateB - dateA;
+        }
+
+        if(sortBy === "oldest") {
+            const dateA = new Date(a.created_at).getTime();
+            const dateB = new Date(b.created_at).getTime();
+
+            return dateA - dateB;
+        }
+
+        if (sortBy === "az") {
+            return a.title.localeCompare(b.title);
+        }
+
+        if (sortBy === "completed") {
+            return Number(b.completed) - Number(a.completed);
+        }
+
+        if (sortBy === "incomplete") {
+            return Number(a.completed) - Number(b.completed);
+        }
+
+        return 0
+    })
+
     return (
         <div className="min-h-screen bg-neutral-950 text-white px-4 sm:px-6 lg:px-12 py-8 rounded-3xl">
             <h1 className="text-4xl font-extrabold tracking-light flex justify-center">Dashboard</h1>
@@ -214,7 +249,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-neutral-400">Sort</span>
                             <select
-                            onChange={(event) => setSortBy(event.target.value)}
+                            onChange={(event) => setSortBy(event.target.value as SortOption)}
                             className="
                                 text-white
                                 transition
@@ -248,7 +283,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                             xl:grid-cols-4 
                             gap-6
                             ">    
-                    {filteredTasks.map(task => (
+                    {sortedTasks.map(task => (
                         <li key={task.id} 
                             className={`
                                 bg-neutral-900
