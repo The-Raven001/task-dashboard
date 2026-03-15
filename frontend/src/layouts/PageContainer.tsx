@@ -4,7 +4,7 @@ type Props = {
     children: ReactNode;
 };
 
-export default function PageContainer({ children }: Props) {
+export default function PageContainer({ children }: {children: React.ReactNode}) {
     return(
         <main className="page-container">
             {children}

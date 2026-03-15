@@ -178,7 +178,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
     })
 
     return (
-        <div className="min-h-screen bg-neutral-950 text-white px-4 sm:px-6 lg:px-12 py-8 rounded-3xl">
+        <div className="flex-1 bg-neutral-950 text-white px-4 sm:px-6 lg:px-12 py-8 rounded-3xl">
             <h1 className="text-4xl font-extrabold tracking-light flex justify-center">Dashboard</h1>
 
             <div className="flex items-center justify-between">
