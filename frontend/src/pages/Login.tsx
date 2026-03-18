@@ -37,34 +37,36 @@ export function Login() {
     }
 
     return (
-        <div className="flex flex-col items-center mt-20">
-            <h1 className="text-2xl mb-6">Login</h1>
-            <form onSubmit={handleSubmit}
-            className="flex flex-col gap-4 w-80"
-            >
-            <input 
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="border p-2 rounded"
-            required />
+        <div className="flex min-h-screen items-center justify-center">
+            <div className="flex flex-col items-center w-full max-w-sm">
+                <h1 className="text-2xl mb-6">Login</h1>
+                <form onSubmit={handleSubmit}
+                className="flex flex-col gap-4 w-80"
+                >
+                <input 
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="border p-2 rounded"
+                required />
 
-            <input 
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="border p-2 rounded"
-            required />
-            <button type="submit"
-            disabled={loading}
-            className="bg-black text-white p-2 rounded"
-            >{loading ? "Logging in..." : "Login"} </button>
-            </form>
-            <div className="mt-6 text-center">
-                <p>Don't have an account yet?</p>
-                <p><Link to="/Register">Create one</Link></p>
+                <input 
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="border p-2 rounded"
+                required />
+                <button type="submit"
+                disabled={loading}
+                className="bg-black text-white p-2 rounded"
+                >{loading ? "Logging in..." : "Login"} </button>
+                </form>
+                <div className="mt-6 text-center">
+                    <p>Don't have an account yet?</p>
+                    <p><Link to="/Register">Create one</Link></p>
+                </div>
             </div>
         </div>
     )

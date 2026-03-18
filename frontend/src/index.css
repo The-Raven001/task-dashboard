@@ -75,15 +75,6 @@ button:focus-visible {
   }
 }
 
-.page-container {
-  min-height: calc(100vh - 64px); /* navbar height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 1rem;
-}
-
 .page-inner {
   width: 100%;
   max-width: 420px;

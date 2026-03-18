@@ -1,5 +1,3 @@
-
-
 export function Sidebar() {
 
     return (
@@ -7,9 +5,12 @@ export function Sidebar() {
                 w-64
                 bg-neutral-900
                 rounded-xl 
-                p-10 m-3
-                min-h-screen">
-            <h2>Menu</h2>
+                p-4 mx-2
+                min-h-screen
+                shrink-0
+                hidden
+                md:block">
+            <h2 className="flex justify-center">Menu</h2>
             <div className="flex flex-col gap-4">
                 List of tasks
             </div>

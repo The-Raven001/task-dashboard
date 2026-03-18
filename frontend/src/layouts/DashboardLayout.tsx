@@ -11,7 +11,7 @@ export default function DashboardLayout() {
         
         <PageContainer>
             <Sidebar />
-           <main> 
+           <main className="flex-1 min-w-0"> 
             <Outlet />
             </main>
         </PageContainer>
