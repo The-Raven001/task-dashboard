@@ -10,10 +10,12 @@ export default function DashboardLayout() {
         <Navbar />
         
         <PageContainer>
-            <Sidebar />
-           <main className="flex-1 min-w-0"> 
-            <Outlet />
-            </main>
+            <div className="flex w-full">
+                <Sidebar />
+                <main className="flex-1 min-w-0"> 
+                    <Outlet />
+                </main>
+            </div>
         </PageContainer>
         <Footer />
         </>
