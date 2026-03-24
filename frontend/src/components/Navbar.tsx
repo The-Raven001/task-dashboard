@@ -8,7 +8,7 @@ export function Navbar() {
             {user && (
                 <div className="flex justify-between p-4">
                     <div className="flex items-center">
-                        <button className="my-2 mx-2">Menu</button>
+                        <button className="my-2 mx-2 md:hidden lg:hidden">Menu</button>
                         <span className="my-2 mx-2">{user.email}</span>
                     </div>
                 <button onClick={logout} 

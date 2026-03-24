@@ -10,9 +10,14 @@ export function Sidebar() {
                 shrink-0
                 hidden
                 md:block">
-            <h2 className="flex justify-center">Menu</h2>
-            <div className="flex flex-col gap-4">
-                List of tasks
+            <h2 className="flex justify-center">List of tasks</h2>
+            <div className="
+                    flex flex-col gap-4
+                    border border-neutral-700
+                    rounded-2xl
+                    p-2 m-1
+                    hover:border-indigo-500">
+                Task list 1
             </div>
         </aside>
     )

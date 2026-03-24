@@ -21,6 +21,8 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        
+
         if (mode === "edit" && task){
             setTitle(task.title);
             setDescription(task.description)
@@ -28,9 +30,24 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
             setTitle("");
             setDescription("")
         }
-    }, [mode, task, isOpen]);
 
-    if (!isOpen) return null;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if(e.key === "Escape"){
+                onClose()
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown)
+
+        
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        };
+
+    }, [mode, task, isOpen, onClose]);
+
+    
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -48,7 +65,7 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
 }
 
     const isEdit = mode === "edit";
-
+    if (!isOpen) return null;
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center backdrop-blur-md">
             <div className="bg-neutral-800/50 p-6 rounded-2xl w-96">
