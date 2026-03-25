@@ -295,26 +295,30 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                     <ul className="
                             grid 
                             grid-cols-1 
-                            sm:grid-cols-2
+                            sm:grid-cols-1
+                            md:grid-cols-2
                             lg:grid-cols-3
-                            xl:grid-cols-4 
+                            2xl:grid-cols-4
+
                             gap-6
+                            items-stretch
                             ">    
                     {sortedTasks.map(task => (
                         <li key={task.id} 
                             className={`
                                 bg-neutral-900
                                 border
-                                p-6
+                                p-4
                                 rounded-2xl
                                 transition-all duration-300
                                 hover:translate-y-1
                                 hover:shadow-xl
+                                h-full
                                 ${task.completed ? "border-green-500/40 bg-green-500/5" : "border-neutral-800 hover:border-neutral-600"}
                                 `}>
-                            <Card>
+                            <Card className="p-4 h-full flex flex-col">
                                 <div className="flex justify-between items-start">
-                                    <h3 className="text-lg font-semibold tracking-tight break-words">{task.title}</h3>
+                                    <h3 className="text-lg font-semibold tracking-tight line-clamp-3 break-words">{task.title}</h3>
                                     <button className="hover:scale-110 active:scale-95 transition p-0" onClick={() => updateTaskState(task)}>{task.completed ? <Check className="text-white hover:text-green-500" /> : <X className="text-red-500 hover:text-red-900"/>}</button> 
                                 </div>
                                 <p className="text-neutral-400 mt-3 text-sm leading-relaxed line-clamp-4 break-words">
@@ -330,7 +334,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                                 <p className="text-xs text-neutral-500 mt-4">
                                     Created {formatDate(task.created_at)}
                                 </p>
-                                <div className="flex gap-3 mt-4">
+                                <div className="flex gap-3 mt-auto pt-4">
                                      <button onClick={() => {
                                     setEditingTask(task);
                                     setIsModalOpen(true)
