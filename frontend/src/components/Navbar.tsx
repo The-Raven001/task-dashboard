@@ -1,6 +1,7 @@
 import { useAuth } from "../auth/AuthContext"
+import { Menu } from "lucide-react"
 
-export function Navbar() {
+export function Navbar({ onMenuClick }: { onMenuClick: () => void }) {
     const {user, logout} = useAuth();
 
     return (
@@ -8,7 +9,7 @@ export function Navbar() {
             {user && (
                 <div className="flex justify-between p-4">
                     <div className="flex items-center">
-                        <button className="my-2 mx-2 2xl:hidden">Menu</button>
+                        <button onClick={onMenuClick} className="my-2 mx-2 2xl:hidden"><Menu /></button>
                         <span className="my-2 mx-2">{user.email}</span>
                     </div>
                 <button onClick={logout} 
