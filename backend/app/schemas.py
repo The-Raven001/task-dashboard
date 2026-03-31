@@ -7,7 +7,7 @@ from datetime import datetime
 class TaskBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=100, example="Cook for mom")
     description:  str | None = Field(None, max_length=2000, example="Make pasta and salad")
-    
+    group_id: Optional[int] = None
 
 class TaskCreate(TaskBase):
     completed: bool = False
@@ -22,6 +22,20 @@ class TaskUpdate(TaskBase):
     description: Optional[str] = None
     completed: Optional[bool] = None
     
+    class Config:
+        orm_mode = True
+
+#TaskGroup
+
+class TaskGroupBase(BaseModel):
+    name: str
+
+class TaskGroupCreate(TaskGroupBase):
+    pass
+
+class TaskGroup(TaskGroupBase):
+    id: int
+
     class Config:
         orm_mode = True
 

@@ -10,6 +10,7 @@ class User(Base):
     email = Column(String, unique=True)
     hashed_password = Column(String)
     tasks = relationship("Task", back_populates="owner")
+    groups = relationship("TaskGroup", back_populates="owner")
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -20,6 +21,20 @@ class Task(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="tasks")
+
+    group_id = Column(Integer, ForeignKey("task_groups.id"), nullable=True)
+    group = relationship("TaskGroup", back_populates="tasks")
+
+class TaskGroup(Base):
+
+   __tablename__ = "task_groups"
+   
+   id = Column(Integer, primary_key=True, index=True)
+   name = Column(String, index=True)
+   owner_id = Column(Integer, ForeignKey("users.id"))
+
+   owner = relationship("User", back_populates="groups")
+   tasks = relationship("Task", back_populates="groups") 
 
 #The database has been created already using:
 

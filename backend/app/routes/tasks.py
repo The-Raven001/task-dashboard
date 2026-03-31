@@ -26,7 +26,10 @@ def create_task(
         title=task.title,
         description=task.description,
         completed=task.completed,
-        owner_id=current_user.id)
+        owner_id=current_user.id,
+        group_id=task.group_id
+        )
+        
 
     db.add(new_task)
     db.commit()
@@ -110,3 +113,85 @@ def delete_task(
     return {"message": "Task deleted successfully"}
 
     #if you use 200 the line above will show.
+
+
+
+#ADD DESCRIPTIONS TO THESE ROUTES!
+
+@router.post("/groups", response_model=schemas.TaskGroup)
+def create_group(group: schemas.TaskGroupCreate, db:Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    new_group = models.TaskGroup(
+        name=group.name,
+        owner_id=current_user.id
+    )
+    db.add(new_group)
+    db.commit()
+    db.refresh(new_group)
+    return new_group
+
+@router.get("/groups", response_model=list[schemas.TaskGroup])
+def get_groups(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    return db.query(models.TaskGroup).filter(
+        models.TaskGroup.owner_id == current_user.id
+    ).all()
+
+@router.get("/groups/{id}", response_model=schemas.TaskGroup)
+def get_group_individually(
+    id:int,
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(get_current_user), 
+    ):
+
+    task_group = db.query(models.Task).filter(
+        models.TaskGroup.id == id, 
+        models.TaskGroup.owner_id = current_user.id).first()
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Task group not found")
+
+    return task_group
+
+@router.put("/groups/{id}", response_model=schemas.TaskGroup)
+def update_task_group_name(
+    id: int,
+    updated_task_group: schemas.TaskGroupCreate,
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(get_current_user)):
+
+    group = db.query(models.TaskGroup).filter(
+        models.TaskGroup.id == id,
+        models.TaskGroup.owner_id == current_user.id
+    ).first()
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Task group not found")
+
+    group.name = updated_group.name
+
+    db.commit()
+    db.refresh(group)
+    return group
+
+    
+
+@router.delete("/groups/{id}", status_code=204)
+def delete_groups(
+    id: int, 
+    db: Session = Depends(get_db), 
+    current_user = models.User = Depends(get_current_user)):
+
+    group = db.query(models.TaskGroup).filter(
+        models.TaskGroup.id == id,
+        models.TaskGroup.owner == current_user.id
+    ).first()
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Task group not found")
+
+    tasks = db.query(models.Task).filter(models.Task.group_id == id).all()
+    for task in tasks:
+        task.group_id = None
+
+    db.delete(group)
+    db.commit()
+    return {"message": "Task group has been deleted succesfully"}
