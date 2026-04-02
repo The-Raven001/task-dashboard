@@ -39,7 +39,7 @@ def create_task(
 #Get tasks, all/individually
 @router.get("/", 
     response_model=list[schemas.Task], 
-    status_code=201,
+    status_code=200,
     summary="Retrieves tasks",
     description="Retrieves all tasks owned by the authenticated user.")
 def get_tasks(db: Session = Depends(get_db),
@@ -67,6 +67,7 @@ def get_task(id: int,
 
 @router.put("/{id}", 
     response_model=schemas.Task,
+    status_code=201,
     summary="Update a task",
     description="Updates the selected tasked owned by the authenticated user.")
 
@@ -107,10 +108,10 @@ def delete_task(
         models.Task.id == id, 
         models.Task.owner_id == current_user.id).first()
     if not task:
-        raise HTTPException(status_code=404, detail="task not found")
+        raise HTTPException(status_code=404, detail="task not found.")
     db.delete(task)
     db.commit()
-    return {"message": "Task deleted successfully"}
+    return {"message": "Task deleted successfully."}
 
     #if you use 200 the line above will show.
 
@@ -118,7 +119,11 @@ def delete_task(
 
 #ADD DESCRIPTIONS TO THESE ROUTES!
 
-@router.post("/groups", response_model=schemas.TaskGroup)
+@router.post("/groups", 
+    response_model=schemas.TaskGroup,
+    status_code=201, 
+    summary="Create group of tasks.", 
+    description="Create a group of tasks to keep them better organized." )
 def create_group(group: schemas.TaskGroupCreate, db:Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     new_group = models.TaskGroup(
         name=group.name,
@@ -129,13 +134,23 @@ def create_group(group: schemas.TaskGroupCreate, db:Session = Depends(get_db), c
     db.refresh(new_group)
     return new_group
 
-@router.get("/groups", response_model=list[schemas.TaskGroup])
+@router.get("/groups",  
+    response_model=list[schemas.TaskGroup]
+    status_code=200,
+    summary="Retrieve group of tasks."
+    description="Retrieve all groups of tasks owned by the logged user."
+    )
 def get_groups(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     return db.query(models.TaskGroup).filter(
         models.TaskGroup.owner_id == current_user.id
     ).all()
 
-@router.get("/groups/{id}", response_model=schemas.TaskGroup)
+@router.get("/groups/{id}", 
+    response_model=schemas.TaskGroup
+    status_code=200,
+    summary="Retrieve a specific group of tasks",
+    description="Retrieve a specific group of tasks given by the id and owned by the logged user."
+    )
 def get_group_individually(
     id:int,
     db: Session = Depends(get_db), 
@@ -147,11 +162,16 @@ def get_group_individually(
         models.TaskGroup.owner_id = current_user.id).first()
 
     if not group:
-        raise HTTPException(status_code=404, detail="Task group not found")
+        raise HTTPException(status_code=404, detail="Task group not found.")
 
     return task_group
 
-@router.put("/groups/{id}", response_model=schemas.TaskGroup)
+@router.put("/groups/{id}", 
+    response_model=schemas.TaskGroup,
+    status_code=201,
+    summary="Update a specific group of tasks.",
+    description="Update a given group of tasks of the logged user."
+    )
 def update_task_group_name(
     id: int,
     updated_task_group: schemas.TaskGroupCreate,
@@ -174,7 +194,11 @@ def update_task_group_name(
 
     
 
-@router.delete("/groups/{id}", status_code=204)
+@router.delete("/groups/{id}", 
+    status_code=204,
+    summary="Delete a group of tasks",
+    description="Delete a given group of tasks onwed by the logged user and assigned the remaining tasks to the general dashboard."
+    )
 def delete_groups(
     id: int, 
     db: Session = Depends(get_db), 
