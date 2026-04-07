@@ -12,10 +12,13 @@ export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => voi
 
             <aside className={`
                     fixed top-0 left-0 h-full w-64 z-50
-                    bg-neutral-900 p-4
+                    bg-neutral-900 p-4 mx-2
                     transform transition-transform duration-300
+                    rounded-xl 
 
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
+                    
+                    2xl:static 2xl:translate-x-0
                     `}>
                 <h2 className="flex justify-center">List of tasks</h2>
                 <div className="

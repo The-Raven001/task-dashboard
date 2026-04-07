@@ -34,7 +34,7 @@ class TaskGroup(Base):
    owner_id = Column(Integer, ForeignKey("users.id"))
 
    owner = relationship("User", back_populates="groups")
-   tasks = relationship("Task", back_populates="groups") 
+   tasks = relationship("Task", back_populates="group") 
 
 #The database has been created already using:
 
