@@ -85,6 +85,12 @@ async function createTask(task: { id?: number; title: string; description: strin
             },
             body: JSON.stringify(task),
         });
+        
+        if(!response.ok){
+            toast.error("Something went wrong");
+            throw new Error("Failed to update task")
+        }
+
         const updatedTask = await response.json();
 
         toast.success("Task edited successfully")
@@ -101,6 +107,12 @@ async function createTask(task: { id?: number; title: string; description: strin
             },
             body: JSON.stringify(task),
         });
+
+        if(!response.ok){
+            toast.error("Something went wrong");
+            throw new Error("Failed to create task")
+        }
+
         const newTask = await response.json();
 
         toast.success("Task created successfully")
@@ -122,6 +134,12 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
             body: JSON.stringify({completed: !task.completed}),
         
         })
+
+        if(!response.ok){
+            toast.error("Something went wrong");
+            throw new Error("Failed to update task")
+        }
+
         const updatedTask = await response.json();
         toast.success(task.completed ? "Marked incomplete": "Marked complete")
         setTasks(prev => prev.map(t=> t.id === task.id ? {...t, ...updatedTask} : t))

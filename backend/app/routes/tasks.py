@@ -116,9 +116,6 @@ def delete_task(
     #if you use 200 the line above will show.
 
 
-
-#ADD DESCRIPTIONS TO THESE ROUTES!
-
 @router.post("/groups", 
     response_model=schemas.TaskGroup,
     status_code=201, 

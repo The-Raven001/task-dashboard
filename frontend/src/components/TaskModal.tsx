@@ -116,8 +116,6 @@ export function TaskModal({ isOpen, onClose, onSubmit, mode, task }: TaskModalPr
                     </button>
                 </div>
                 </form>
-
-                
             </div>
         </div>
     )

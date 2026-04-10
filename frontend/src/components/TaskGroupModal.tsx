@@ -1,0 +1,124 @@
+import { useState, useEffect } from "react"
+import  toast  from "react-hot-toast";
+
+
+type TaskGroup = {
+    id: number;
+    name: string;
+}
+
+type TaskGroupModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    onSubmit: (taskGroup: {id?: number; name: string;}) => Promise<void>;
+    mode: "create" | "edit";
+    taskGroup?: TaskGroup | null;
+}
+
+export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: TaskGroupModalProps) {
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("")
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (mode === "edit" && taskGroup){
+            setName(taskGroup.name);
+        } else {
+            setName("");
+        }
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if(e.key === "Escape") {
+                onClose()
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown)
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown)
+        };
+
+    }, [mode, taskGroup, isOpen, onClose]);
+
+    async function createTaskGroup(taskGroup: { id?: number;  name: string;}) {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        /* Edit task group */
+
+        if (taskGroup.id){
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/gropus/${taskGroup.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(taskGroup),
+            }) 
+            const updatedTaskGroup = await response.json();
+
+            toast.success("Task group name edited successfully")
+        }
+
+    }
+
+    async function handleSubmit(event: React.FormEvent) {
+        event.preventDefault();
+        setLoading(true);
+
+        await onSubmit({
+            id: taskGroup?.id,
+            name
+        })
+
+        setLoading(false)
+        onClose();
+    }
+
+    const isEdit = mode === "edit";
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center backdrop-blur-md">
+            <div className="bg-neutral-800/50 p-6 rounded-2xl w-96">
+                <h2 className="text-lg font-bold mb-4">
+                    New Task Group
+                </h2>
+                <form onSubmit={handleSubmit}>
+                    <input 
+                    className="w-full border p-2 mb-4 rounded-xl focus:outline-none focus:border-indigo-500 hover:border-indigo-500 transition"
+                    placeholder="Task Group Name"
+                    maxLength={50}
+                    value={name}
+                    onChange={event => setName(event.target.value)}
+                    required
+                    type="text" />
+                </form>
+                <div className="flex justify-end gap-2">
+                    <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-3 py-1 border"
+
+                    >
+                    Cancel
+                    </button>
+
+                    <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-3 py-1 bg-black text-white">
+                        {loading
+                            ? isEdit 
+                                ? "Updating..."
+                                : "Creating..."
+                            : isEdit 
+                            ? "Update"
+                            : "Create"
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
