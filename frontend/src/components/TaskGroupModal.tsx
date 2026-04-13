@@ -17,7 +17,6 @@ type TaskGroupModalProps = {
 
 export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: TaskGroupModalProps) {
     const [name, setName] = useState("");
-    const [description, setDescription] = useState("")
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -41,27 +40,6 @@ export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: T
 
     }, [mode, taskGroup, isOpen, onClose]);
 
-    async function createTaskGroup(taskGroup: { id?: number;  name: string;}) {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        /* Edit task group */
-
-        if (taskGroup.id){
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/gropus/${taskGroup.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(taskGroup),
-            }) 
-            const updatedTaskGroup = await response.json();
-
-            toast.success("Task group name edited successfully")
-        }
-
-    }
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -93,7 +71,6 @@ export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: T
                     onChange={event => setName(event.target.value)}
                     required
                     type="text" />
-                </form>
                 <div className="flex justify-end gap-2">
                     <button
                     type="button"
@@ -118,6 +95,8 @@ export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: T
                         }
                     </button>
                 </div>
+                </form>
+                
             </div>
         </div>
     )

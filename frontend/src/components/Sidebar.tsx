@@ -5,21 +5,22 @@ import toast from "react-hot-toast";
 
 type TaskGroup = {
     id: number;
-    title: string;
+    name: string;
 }
 
 export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) {
     const [isModalOpen, setIsmodalOpen] = useState(false)
     const [editingTaskGroup, setEditingTaskGroup] = useState<TaskGroup | null>(null)
+    const [ taskGroups, setTaskGroups ] = useState<TaskGroup[]>([])
 
-        async function createTaskGroup(taskGroup: { id?: number;  name: string;}) {
+    async function createTaskGroup(taskGroup: { id?: number;  name: string;}) {
         const token = localStorage.getItem("token");
         if (!token) return;
 
         /* Edit task group */
 
         if (taskGroup.id){
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/gropus/${taskGroup.id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups/${taskGroup.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,7 +37,29 @@ export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => voi
             const updatedTaskGroup = await response.json();
 
             toast.success("Task group name edited successfully")
-            set
+            setTaskGroups(prev => prev.map(tg => tg.id === editingTaskGroup?.id ? {...tg, ...updatedTaskGroup} : tg))
+            setEditingTaskGroup(null)
+        } else {
+            /* Create task */
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(taskGroup)
+          });
+
+          if(!response.ok){
+            toast.error("Something went wrong")
+            throw new Error("Failed to create a task")
+          }
+
+          const newTaskGroup = await response.json();
+
+          toast.success("Task group created successfully")
+          setTaskGroups(prev => [...prev, newTaskGroup])
+
         }
 
     }
@@ -64,18 +87,33 @@ export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => voi
                 <div className="flex justify-between">
                     <h2 className="flex justify-center">List of tasks</h2>
                     <button
-                    ><Plus /></button> 
+                    onClick={() => 
+                    {setEditingTaskGroup(null)
+                    setIsmodalOpen(true)}}
+                    className="
+                        text-white
+                        flex
+                        items-stretch
+                        my-2
+                        flex-items-center
+                        gap-2
+                        transition
+                        hover:scale-105
+                        hover:border-indigo-500
+                        focues:border-indigo-500" 
+                    ><Plus />
+                    </button> 
                 </div>
 
                 <TaskGroupModal
-                isOpen={isModalOpen}
-                onClose={() => {
-                    setIsmodalOpen(false)
-                    setEditingTaskGroup(null)
-                }}
-                onSubmit={(taskGroup) => createTaskGroup(taskGroup)}
-                mode={editingTaskGroup ? "edit" : "create"}
-                taskGroup={editingTaskGroup}
+                    isOpen={isModalOpen}
+                    onClose={() => {
+                        setIsmodalOpen(false)
+                        setEditingTaskGroup(null)
+                    }}
+                    onSubmit={(taskGroup) => createTaskGroup(taskGroup)}
+                    mode={editingTaskGroup ? "edit" : "create"}
+                    taskGroup={editingTaskGroup}
                 />
 
                 <div className="

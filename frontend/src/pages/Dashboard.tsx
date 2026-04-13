@@ -105,7 +105,7 @@ async function createTask(task: { id?: number; title: string; description: strin
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(task),
+            body: JSON.stringify(task)
         });
 
         if(!response.ok){
