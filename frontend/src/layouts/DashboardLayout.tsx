@@ -24,7 +24,7 @@ export default function DashboardLayout() {
         if (!token) return
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks-groups`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -50,7 +50,7 @@ export default function DashboardLayout() {
         /* Edit task group */
 
         if (taskGroup.id){
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups/${taskGroup.id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks-groups/${taskGroup.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export default function DashboardLayout() {
             setEditingTaskGroup(null)
         } else {
             /* Create group task */
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks-groups`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

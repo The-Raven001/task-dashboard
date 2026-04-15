@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import tasks, users, auth
+from app.routes import tasks, users, auth, task_groups
 from app.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,7 +20,9 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(tasks.router)
+app.include_router(task_groups.router)
 app.include_router(users.router)
+
 
 @app.get("/")
 def home():
