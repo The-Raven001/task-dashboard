@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import List, Optional
 from datetime import datetime
 
@@ -35,9 +35,10 @@ class TaskGroupCreate(TaskGroupBase):
 
 class TaskGroup(TaskGroupBase):
     id: int
+    name: str
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
+
 
 #Users
 

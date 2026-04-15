@@ -4,14 +4,7 @@ import { TaskModal } from "../components/TaskModal";
 import { Trash2, Pencil, Plus, Check, X} from "lucide-react";
 import toast from "react-hot-toast";
 import { Card } from "../layouts/Card";
-
-type Task = {
-    id: number;
-    title: string;
-    description: string;
-    completed: boolean;
-    created_at: string;
-    };
+import type { Task } from "../types/task";
 
 type SortOption = "newest" | "oldest" | "az" | "completed" | "incomplete";
 

@@ -1,68 +1,20 @@
-import { useState } from "react"
-import { TaskGroupModal } from "./TaskGroupModal";
 import { Plus } from "lucide-react";
-import toast from "react-hot-toast";
+import type { TaskGroup } from "../types/taskGroup";
+import { Pencil } from "lucide-react";
 
-type TaskGroup = {
-    id: number;
-    name: string;
+
+type SidebarProps = {
+    isOpen: boolean,
+    onClose: () => void;
+    onCreateGroup: () => void
+    onEditGroup: (group: TaskGroup) => void;
+    taskGroups: TaskGroup[];
 }
 
-export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => void }) {
-    const [isModalOpen, setIsmodalOpen] = useState(false)
-    const [editingTaskGroup, setEditingTaskGroup] = useState<TaskGroup | null>(null)
-    const [ taskGroups, setTaskGroups ] = useState<TaskGroup[]>([])
 
-    async function createTaskGroup(taskGroup: { id?: number;  name: string;}) {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups} : SidebarProps) {
 
-        /* Edit task group */
-
-        if (taskGroup.id){
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups/${taskGroup.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(taskGroup),
-            }) 
-
-            if(!response.ok){
-                toast.error("Something went wrong");
-                throw new Error("Failed to edit task group")
-            }
-
-            const updatedTaskGroup = await response.json();
-
-            toast.success("Task group name edited successfully")
-            setTaskGroups(prev => prev.map(tg => tg.id === editingTaskGroup?.id ? {...tg, ...updatedTaskGroup} : tg))
-            setEditingTaskGroup(null)
-        } else {
-            /* Create task */
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks/groups`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(taskGroup)
-          });
-
-          if(!response.ok){
-            toast.error("Something went wrong")
-            throw new Error("Failed to create a task")
-          }
-
-          const newTaskGroup = await response.json();
-
-          toast.success("Task group created successfully")
-          setTaskGroups(prev => [...prev, newTaskGroup])
-
-        }
-
-    }
+    
     
     return (
         <>
@@ -87,9 +39,7 @@ export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => voi
                 <div className="flex justify-between">
                     <h2 className="flex justify-center">List of tasks</h2>
                     <button
-                    onClick={() => 
-                    {setEditingTaskGroup(null)
-                    setIsmodalOpen(true)}}
+                    onClick={onCreateGroup}
                     className="
                         text-white
                         flex
@@ -105,41 +55,27 @@ export function Sidebar({isOpen, onClose}: { isOpen: boolean; onClose: () => voi
                     </button> 
                 </div>
 
-                <TaskGroupModal
-                    isOpen={isModalOpen}
-                    onClose={() => {
-                        setIsmodalOpen(false)
-                        setEditingTaskGroup(null)
-                    }}
-                    onSubmit={(taskGroup) => createTaskGroup(taskGroup)}
-                    mode={editingTaskGroup ? "edit" : "create"}
-                    taskGroup={editingTaskGroup}
-                />
-
-                <div className="
+            {taskGroups.map(group => (
+                <div
+                    key={group.id}
+                    className="
                         flex flex-col gap-4
                         border border-neutral-700
                         rounded-2xl
                         p-2 m-1
-                        hover:border-indigo-500">
-                    Task list 1
+                        hover:border-indigo-500
+                        cursor-pointer
+                    "
+                >
+                    <div className="flex justify-between items-center">
+                        {group.name}  
+                        <button
+                            onClick={() => onEditGroup(group)}>
+                            <Pencil />
+                        </button>
+                    </div> 
                 </div>
-                <div className="
-                        flex flex-col gap-4
-                        border border-neutral-700
-                        rounded-2xl
-                        p-2 m-1
-                        hover:border-indigo-500">
-                    Task list 2
-                </div>
-                <div className="
-                        flex flex-col gap-4
-                        border border-neutral-700
-                        rounded-2xl
-                        p-2 m-1
-                        hover:border-indigo-500">
-                    Task list 3
-                </div>
+            ))}
             </aside>
         </>
         

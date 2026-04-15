@@ -1,18 +1,12 @@
 import { useState, useEffect } from "react"
-import  toast  from "react-hot-toast";
-
-
-type TaskGroup = {
-    id: number;
-    name: string;
-}
+import type { TaskGroup, TaskGroupInput } from "../types/taskGroup";
 
 type TaskGroupModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (taskGroup: {id?: number; name: string;}) => Promise<void>;
+    onSubmit: (taskGroup: TaskGroupInput) => Promise<void>;
     mode: "create" | "edit";
-    taskGroup?: TaskGroup | null;
+    taskGroup: TaskGroup | null;
 }
 
 export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: TaskGroupModalProps) {
@@ -40,9 +34,11 @@ export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: T
 
     }, [mode, taskGroup, isOpen, onClose]);
 
-
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
+
+        if (!name.trim()) return;
+
         setLoading(true);
 
         await onSubmit({
@@ -57,10 +53,14 @@ export function TaskGroupModal ({ isOpen, onClose, onSubmit, mode, taskGroup}: T
     const isEdit = mode === "edit";
     if (!isOpen) return null;
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center backdrop-blur-md">
-            <div className="bg-neutral-800/50 p-6 rounded-2xl w-96">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center backdrop-blur-md"
+             onClick={onClose}   
+                >
+            <div className="bg-neutral-800/50 p-6 rounded-2xl w-96"
+                 onClick={(e) => e.stopPropagation()}
+                >
                 <h2 className="text-lg font-bold mb-4">
-                    New Task Group
+                    {isEdit ? "Edit Task Group": "New Task Group"}
                 </h2>
                 <form onSubmit={handleSubmit}>
                     <input 
