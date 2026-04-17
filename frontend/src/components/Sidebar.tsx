@@ -7,15 +7,15 @@ import { Trash } from "lucide-react";
 type SidebarProps = {
     isOpen: boolean,
     onClose: () => void;
-    onCreateGroup: () => void
+    onCreateGroup: () => void;
     onEditGroup: (group: TaskGroup) => void;
     taskGroups: TaskGroup[];
     onSelectGroup: (groupId: number | null) => void;
-
+    onDeleteGroup: (groupId: number) => void;
 }
 
 
-export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups, onSelectGroup} : SidebarProps) {
+export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups, onSelectGroup, onDeleteGroup} : SidebarProps) {
 
     
     
@@ -76,10 +76,12 @@ export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups
                 >
                     <div className="flex justify-between items-center">
                         {group.name}  
-                        <div>
-                            <button
-                            onClick={() => onEditGroup(group)}>
+                        <div >
+                            <button onClick={() => onEditGroup(group)}>
                             <Pencil />
+                            </button>
+                            <button onClick={(e) =>  {e.stopPropagation(); onDeleteGroup(group.id)}}>
+                                <Trash />
                             </button>
                         </div>
                     </div> 

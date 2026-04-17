@@ -27,6 +27,7 @@ export default function DashboardLayout() {
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks-groups`, {
                 headers: {
+                    "Content-Type": "application/json", 
                     Authorization: `Bearer ${token}`,
                 },
             });
@@ -40,6 +41,7 @@ export default function DashboardLayout() {
             setTaskGroups(data);
         
         } catch (error){
+            toast.error("Something went wrong")
             console.error(error)
         }
     }
@@ -60,7 +62,7 @@ export default function DashboardLayout() {
                 body: JSON.stringify(taskGroup),
             }) 
 
-            if(!response.ok){
+            if (!response.ok){
                 toast.error("Something went wrong");
                 throw new Error("Failed to edit task group")
             }
@@ -95,6 +97,36 @@ export default function DashboardLayout() {
 
     }
 
+    async function deleteTaskGroup(id: number) {
+        const token = localStorage.getItem("token");
+        
+        if (!token) return;
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks-groups/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+
+            })
+
+           if (!response.ok) {
+                throw new Error("Failed to delete task")
+           }
+
+           setTaskGroups(prev => prev.filter(tg => tg.id !== id) )
+           toast.success("Task group has been deleted successfully")
+
+           setSelectedGroupId(prev => (prev === id ? null : prev))
+
+        } catch (error) {
+            console.error(error)
+            toast.error("Something went wrong")
+        }
+    }
+
     return (
         <>
         <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
@@ -113,6 +145,7 @@ export default function DashboardLayout() {
                     }} 
                     taskGroups={taskGroups}
                     onSelectGroup={(groupId) => setSelectedGroupId(groupId)}
+                    onDeleteGroup={(groupId) => deleteTaskGroup(groupId)}
                     />
                 <main className="flex-1 min-w-0"> 
                     <Outlet context={{ selectedGroupId }}/>

@@ -163,7 +163,6 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ id })
         })
         
         if (!response.ok){
