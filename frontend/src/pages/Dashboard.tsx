@@ -5,6 +5,9 @@ import { Trash2, Pencil, Plus, Check, X} from "lucide-react";
 import toast from "react-hot-toast";
 import { Card } from "../layouts/Card";
 import type { Task } from "../types/task";
+import { useOutletContext } from "react-router-dom"
+
+type ContextType = { selectedGroupId: number | null };
 
 type SortOption = "newest" | "oldest" | "az" | "completed" | "incomplete";
 
@@ -18,10 +21,11 @@ export function Dashboard(){
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<SortOption>("newest");
     const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-
+    const { selectedGroupId } = useOutletContext<ContextType>();
 
     useEffect (() => {
-        loadTasks()}, [user])
+        setLoading(true)
+        loadTasks(selectedGroupId)}, [user, selectedGroupId])
 
     useEffect(() => {
         if(!selectedTask) return;
@@ -40,28 +44,37 @@ export function Dashboard(){
 
     }, [selectedTask])
 
-    async function loadTasks() {
+    async function loadTasks(groupId?: number | null) {
         const token = localStorage.getItem("token");
 
-         if (!token) return;
-        
+        if (!token) return
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks`, {
+            let url = `${import.meta.env.VITE_API_URL}/tasks`;
+
+            if (groupId !== null && groupId !== undefined) {
+                url += `?group_id=${groupId}`;
+            }
+
+            const response = await fetch(url, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                }
-            })
-        if(!response.ok){
-            toast.error("Something went wrong");
-            throw new Error("Failed to fetch tasks");
-        }
-        const data = await response.json()
-        setTasks(data);
+                },
+            });
+
+            if (!response.ok){
+                throw new Error("Failed to fetch tasks");
+            }
+
+            const data = await response.json();
+            setTasks(data);
+
         } catch (error) {
             console.error(error);
+            toast.error("Failed to load tasks");
         } finally {
             setLoading(false);
-        }    
+        }
     }
 
 async function createTask(task: { id?: number; title: string; description: string; completed?: boolean }) {
@@ -76,7 +89,7 @@ async function createTask(task: { id?: number; title: string; description: strin
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(task),
+            body: JSON.stringify({...task, group_id: selectedGroupId}),
         });
         
         if(!response.ok){

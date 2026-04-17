@@ -1,6 +1,7 @@
 import { Plus } from "lucide-react";
 import type { TaskGroup } from "../types/taskGroup";
 import { Pencil } from "lucide-react";
+import { Trash } from "lucide-react";
 
 
 type SidebarProps = {
@@ -9,10 +10,12 @@ type SidebarProps = {
     onCreateGroup: () => void
     onEditGroup: (group: TaskGroup) => void;
     taskGroups: TaskGroup[];
+    onSelectGroup: (groupId: number | null) => void;
+
 }
 
 
-export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups} : SidebarProps) {
+export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups, onSelectGroup} : SidebarProps) {
 
     
     
@@ -54,10 +57,14 @@ export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups
                     ><Plus />
                     </button> 
                 </div>
+                <div >
+                    <button onClick={() => onSelectGroup(null)}>All tasks</button>
+                </div>
 
             {taskGroups.map(group => (
                 <div
                     key={group.id}
+                    onClick={() => onSelectGroup(group.id)}
                     className="
                         flex flex-col gap-4
                         border border-neutral-700
@@ -69,10 +76,12 @@ export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups
                 >
                     <div className="flex justify-between items-center">
                         {group.name}  
-                        <button
+                        <div>
+                            <button
                             onClick={() => onEditGroup(group)}>
                             <Pencil />
-                        </button>
+                            </button>
+                        </div>
                     </div> 
                 </div>
             ))}

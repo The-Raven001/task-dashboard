@@ -14,6 +14,7 @@ export default function DashboardLayout() {
     const [editingTaskGroup, setEditingTaskGroup] = useState<TaskGroup | null>(null);
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false)
     const [isSideBarOpen, setIsSidebarOpen] = useState(false)
+    const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
 
     useEffect(() => {
         loadTaskGroups();
@@ -22,7 +23,7 @@ export default function DashboardLayout() {
     async function loadTaskGroups() {
         const token = localStorage.getItem("token");
         if (!token) return
-
+    
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/tasks-groups`, {
                 headers: {
@@ -111,9 +112,10 @@ export default function DashboardLayout() {
                         setIsGroupModalOpen(true)
                     }} 
                     taskGroups={taskGroups}
+                    onSelectGroup={(groupId) => setSelectedGroupId(groupId)}
                     />
                 <main className="flex-1 min-w-0"> 
-                    <Outlet />
+                    <Outlet context={{ selectedGroupId }}/>
                 </main>
             </div>
         </PageContainer>

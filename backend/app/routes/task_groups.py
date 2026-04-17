@@ -46,11 +46,11 @@ def get_group_individually(
     current_user: models.User = Depends(get_current_user), 
     ):
 
-    task_group = db.query(models.Task).filter(
+    task_group = db.query(models.TaskGroup).filter(
         models.TaskGroup.id == id, 
         models.TaskGroup.owner_id == current_user.id).first()
 
-    if not group:
+    if not task_group:
         raise HTTPException(status_code=404, detail="Task group not found.")
 
     return task_group
@@ -75,7 +75,7 @@ def update_task_group_name(
     if not group:
         raise HTTPException(status_code=404, detail="Task group not found")
 
-    group.name = updated_group.name
+    group.name = updated__task_group.name
 
     db.commit()
     db.refresh(group)
@@ -95,7 +95,7 @@ def delete_groups(
 
     group = db.query(models.TaskGroup).filter(
         models.TaskGroup.id == id,
-        models.TaskGroup.owner == current_user.id
+        models.TaskGroup.owner_id == current_user.id
     ).first()
 
     if not group:
