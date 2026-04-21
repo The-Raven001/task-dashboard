@@ -12,10 +12,11 @@ type SidebarProps = {
     taskGroups: TaskGroup[];
     onSelectGroup: (groupId: number | null) => void;
     onDeleteGroup: (groupId: number) => void;
+    selectedGroupId: number | null
 }
 
 
-export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups, onSelectGroup, onDeleteGroup} : SidebarProps) {
+export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups, onSelectGroup, onDeleteGroup, selectedGroupId} : SidebarProps) {
 
     
     
@@ -31,57 +32,83 @@ export function Sidebar({isOpen, onClose, onCreateGroup, onEditGroup, taskGroups
 
             <aside className={`
                     fixed top-0 left-0 h-full w-64 z-50
-                    bg-neutral-900 p-4 mx-2
-                    transform transition-transform duration-300
+                    bg-neutral-900 
+                    p-4 mx-2
                     rounded-xl 
+                    transform transition-transform duration-300
+                    
 
                     ${isOpen ? "translate-x-0" : "-translate-x-full"}
                     
                     2xl:static 2xl:translate-x-0
                     `}>
-                <div className="flex justify-between">
-                    <h2 className="flex justify-center">List of tasks</h2>
+
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-neutral-200 flex justify-center">
+                        Task Groups
+                    </h2>
+
                     <button
                     onClick={onCreateGroup}
                     className="
-                        text-white
-                        flex
-                        items-stretch
-                        my-2
-                        flex-items-center
-                        gap-2
+                        p-2
+                        rounded-lg
+                        hover:bg-neutral-800
                         transition
-                        hover:scale-105
-                        hover:border-indigo-500
-                        focues:border-indigo-500" 
+                        " 
                     ><Plus />
                     </button> 
                 </div>
                 <div >
-                    <button onClick={() => onSelectGroup(null)}>All tasks</button>
+                    
+                    <button onClick={() => onSelectGroup(null)}
+                            className="
+                                w-full
+                                text-left 
+                                px-3 py-2
+                                rounded-xl
+                                hover:bg-neutral-800
+                                transition 
+                            "
+                        >All tasks</button>
                 </div>
 
             {taskGroups.map(group => (
                 <div
                     key={group.id}
                     onClick={() => onSelectGroup(group.id)}
-                    className="
-                        flex flex-col gap-4
-                        border border-neutral-700
-                        rounded-2xl
+                    className={`
+                        group
+                        items-center justify-between
+                        px-3 py-2 my-2
+                        rounded-xl
                         p-2 m-1
-                        hover:border-indigo-500
                         cursor-pointer
-                    "
+                        transition-all duration-200
+                        
+                        ${group.id === selectedGroupId
+                            ? "bg-neutral-800 border-neutral-600"
+                            : "bg-neutral-900 border-neutral-800 hover:bg-neutral-800 hover:border-neutral-600"
+                        }
+                        
+                    `}
                 >
-                    <div className="flex justify-between items-center">
-                        {group.name}  
-                        <div >
-                            <button onClick={() => onEditGroup(group)}>
-                            <Pencil />
+                    <div className="flex flex-1 justify-between items-center truncate min-w-0">
+                        <span className="text-sm truncate">
+                            {group.name}  
+                        </span>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                            <button 
+                                onClick={() => onEditGroup(group)}
+                                className="hover:text-blue-400 transition"
+                                >
+                            <Pencil size={16}/>
                             </button>
-                            <button onClick={(e) =>  {e.stopPropagation(); onDeleteGroup(group.id)}}>
-                                <Trash />
+                            <button 
+                                onClick={(e) =>  {e.stopPropagation(); onDeleteGroup(group.id)}}
+                                className="hover:text-red-500 transition"
+                                >
+                                <Trash size={16}/>
                             </button>
                         </div>
                     </div> 

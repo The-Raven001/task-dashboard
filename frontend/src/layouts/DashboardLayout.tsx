@@ -146,6 +146,7 @@ export default function DashboardLayout() {
                     taskGroups={taskGroups}
                     onSelectGroup={(groupId) => setSelectedGroupId(groupId)}
                     onDeleteGroup={(groupId) => deleteTaskGroup(groupId)}
+                    selectedGroupId={selectedGroupId}
                     />
                 <main className="flex-1 min-w-0"> 
                     <Outlet context={{ selectedGroupId }}/>

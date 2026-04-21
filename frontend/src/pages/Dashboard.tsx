@@ -111,7 +111,9 @@ async function createTask(task: { id?: number; title: string; description: strin
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(task)
+            body: JSON.stringify({
+                ...task, 
+                group_id: selectedGroupId})
         });
 
         if(!response.ok){
@@ -122,7 +124,9 @@ async function createTask(task: { id?: number; title: string; description: strin
         const newTask = await response.json();
 
         toast.success("Task created successfully")
-        setTasks(prev => [...prev, newTask]);
+        if (selectedGroupId === null || newTask.group_id === selectedGroupId) {
+            setTasks(prev => [...prev, newTask])
+        }
     }
 }
 

@@ -75,7 +75,7 @@ def update_task_group_name(
     if not group:
         raise HTTPException(status_code=404, detail="Task group not found")
 
-    group.name = updated__task_group.name
+    group.name = updated_task_group.name
 
     db.commit()
     db.refresh(group)
