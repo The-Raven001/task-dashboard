@@ -6,8 +6,13 @@ import toast from "react-hot-toast";
 import { Card } from "../layouts/Card";
 import type { Task } from "../types/task";
 import { useOutletContext } from "react-router-dom"
+import type { TaskGroup } from "../types/taskGroup"
 
-type ContextType = { selectedGroupId: number | null };
+type ContextType = { 
+    selectedGroupId: number | null;
+    taskGroups: TaskGroup[];
+
+};
 
 type SortOption = "newest" | "oldest" | "az" | "completed" | "incomplete";
 
@@ -21,7 +26,14 @@ export function Dashboard(){
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState<SortOption>("newest");
     const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-    const { selectedGroupId } = useOutletContext<ContextType>();
+    const { selectedGroupId, taskGroups } = useOutletContext<ContextType>();
+
+    // Find selected group
+    const selectedGroup = taskGroups.find(
+        group => group.id === selectedGroupId
+    );
+
+    const groupName = selectedGroup ? selectedGroup.name: "All Tasks";
 
     useEffect (() => {
         setLoading(true)
@@ -226,7 +238,7 @@ async function updateTaskState(task: {id: number; completed: boolean}) {
             <h1 className="text-4xl font-extrabold tracking-light flex justify-center">Dashboard</h1>
 
             <div className="flex items-center justify-between">
-                <p>Welcome {user?.username}</p>
+                <span className="font-bold">{groupName}</span>
 
             <button onClick={() => 
                 {setEditingTask(null);

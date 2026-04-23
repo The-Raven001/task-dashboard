@@ -149,7 +149,7 @@ export default function DashboardLayout() {
                     selectedGroupId={selectedGroupId}
                     />
                 <main className="flex-1 min-w-0"> 
-                    <Outlet context={{ selectedGroupId }}/>
+                    <Outlet context={{ selectedGroupId, taskGroups }}/>
                 </main>
             </div>
         </PageContainer>
