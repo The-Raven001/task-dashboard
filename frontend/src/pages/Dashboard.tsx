@@ -17,7 +17,7 @@ type ContextType = {
 type SortOption = "newest" | "oldest" | "az" | "completed" | "incomplete";
 
 export function Dashboard(){
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
 
     const [ tasks, setTasks ] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);

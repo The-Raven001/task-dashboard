@@ -4,6 +4,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Landing } from "./pages/Landing";
+import { NotFound } from "./pages/NotFound";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import { Toaster } from "react-hot-toast";
@@ -28,6 +29,7 @@ function App() {
           <Route
           path="/landing"
           element={<Landing />}/>
+
         </Route>
         
         {/* Protected routes */}
@@ -38,6 +40,11 @@ function App() {
         </Route>
 
         </Route>
+
+        <Route
+        path="*"
+        element={<NotFound />}
+        />
 
       </Routes>
       </>

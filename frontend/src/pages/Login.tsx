@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 
 export function Login() {
     const {login, isAuthenticated } = useAuth();
-    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

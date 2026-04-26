@@ -6,21 +6,21 @@ A full-stack task management application with user authentication, task groups, 
 
 ## Tech Stack
 
-- Frontend: React + TypeScript + Vite
-- Backend: FastAPI (Python)
-- Database: PostgreSQL
-- Auth: JWT
+* Frontend: React + TypeScript + Vite
+* Backend: FastAPI (Python)
+* Database: PostgreSQL
+* Auth: JWT
 
 ---
 
 ## Features
 
-- User authentication (login/register)
-- Create, edit, delete tasks
-- Create, edit, delete task groups
-- Filter tasks by group
-- Mark tasks as completed
-- Search and sort tasks
+* User authentication (login/register)
+* Create, edit, delete tasks
+* Create, edit, delete task groups
+* Filter tasks by group
+* Mark tasks as completed
+* Search and sort tasks
 
 ---
 
@@ -31,36 +31,76 @@ A full-stack task management application with user authentication, task groups, 
 ```bash
 python -m venv venv
 venv\Scripts\activate
-2. Install dependencies
+```
+
+### 2. Install dependencies
+
+```bash
 pip install fastapi uvicorn[standard]
-3. Run the server
+```
+
+### 3. Run the server
+
+```bash
 uvicorn app.main:app --reload
+```
 
 Backend runs at:
-http://localhost:8000
 
-Frontend Setup
-1. Install dependencies
+[http://localhost:8000](http://localhost:8000)
+
+---
+
+## Frontend Setup
+
+### 1. Install dependencies
+
+```bash
 npm install
-2. Run development server
+```
+
+### 2. Run development server
+
+```bash
 npm run dev
+```
 
 Frontend runs at:
-http://localhost:5173
 
-Environment Variables
+[http://localhost:5173](http://localhost:5173)
 
-Create a .env file in both frontend and backend if required.
+---
 
-Backend .env
+## Environment Variables
+
+Create a `.env` file in both frontend and backend if required.
+
+### Backend `.env`
+
+```
 DATABASE_URL=your_database_url
 SECRET_KEY=your_secret_key
-Frontend .env
+```
+
+### Frontend `.env`
+
+```
 VITE_API_URL=http://localhost:8000
-Notes
-Make sure PostgreSQL is running before starting the backend
-Run migrations if using Alembic:
+```
+
+---
+
+## Notes
+
+* Make sure PostgreSQL is running before starting the backend
+* Run migrations if using Alembic:
+
+```bash
 alembic upgrade head
-Author
+```
+
+---
+
+## Author
 
 Gabriel Montilla

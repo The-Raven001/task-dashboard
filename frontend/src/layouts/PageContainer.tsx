@@ -1,9 +1,3 @@
-import type { ReactNode } from "react";
-
-type Props = {
-    children: ReactNode;
-};
-
 export default function PageContainer({ children }: {children: React.ReactNode}) {
     return(
         <main className="flex min-h-[calc(100vh-64px)] w-full p-4">
