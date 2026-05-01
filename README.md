@@ -6,100 +6,45 @@ A full-stack task management application with user authentication, task groups, 
 
 ## Tech Stack
 
-* Frontend: React + TypeScript + Vite
-* Backend: FastAPI (Python)
-* Database: PostgreSQL
-* Auth: JWT
+- Frontend: React + TypeScript + Vite
+- Backend: FastAPI (Python)
+- Database: PostgreSQL
+- Auth: JWT
+- Containerization: Docker + Docker Compose
 
 ---
 
 ## Features
 
-* User authentication (login/register)
-* Create, edit, delete tasks
-* Create, edit, delete task groups
-* Filter tasks by group
-* Mark tasks as completed
-* Search and sort tasks
+- User authentication (login/register)
+- Create, edit, delete tasks
+- Create, edit, delete task groups
+- Filter tasks by group
+- Mark tasks as completed
+- Search and sort tasks
 
 ---
 
-## Backend Setup
+## Running the Project (Docker)
 
-### 1. Create and activate virtual environment
+This project is fully containerized.
 
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 2. Install dependencies
+### Start everything
 
 ```bash
-pip install fastapi uvicorn[standard]
+docker compose up --build
 ```
 
-### 3. Run the server
+## Access the Apps
+- Frontend: http://localhost:5173
+- Backend: http://localhost:8000
+- Database: PostgreSQL running in Docker (task_db)
 
-```bash
-uvicorn app.main:app --reload
-```
+## Notes:
+- No need to install PostgreSQL locally
+- First run may take a few minutes while Docker builds images
+- Data persists using Docker volumes
 
-Backend runs at:
-
-[http://localhost:8000](http://localhost:8000)
-
----
-
-## Frontend Setup
-
-### 1. Install dependencies
-
-```bash
-npm install
-```
-
-### 2. Run development server
-
-```bash
-npm run dev
-```
-
-Frontend runs at:
-
-[http://localhost:5173](http://localhost:5173)
-
----
-
-## Environment Variables
-
-Create a `.env` file in both frontend and backend if required.
-
-### Backend `.env`
-
-```
-DATABASE_URL=your_database_url
-SECRET_KEY=your_secret_key
-```
-
-### Frontend `.env`
-
-```
-VITE_API_URL=http://localhost:8000
-```
-
----
-
-## Notes
-
-* Make sure PostgreSQL is running before starting the backend
-* Run migrations if using Alembic:
-
-```bash
-alembic upgrade head
-```
-
----
 
 ## Author
 

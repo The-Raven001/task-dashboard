@@ -1,6 +1,10 @@
+fastapi
 uvicorn[standard]
 python-dotenv
-sqlalchemy
-passlib[bcrypt]
 python-jose
+sqlalchemy
 pydantic
+pydantic[email]
+psycopg2-binary
+passlib[bcrypt]==1.7.4
+bcrypt==3.2.2
