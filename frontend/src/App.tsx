@@ -8,6 +8,7 @@ import { NotFound } from "./pages/NotFound";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PublicLayout from "./layouts/PublicLayout";
 import { Toaster } from "react-hot-toast";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -26,9 +27,11 @@ function App() {
           path="/register"
           element={<Register />}
           />
-          <Route
-          path="/landing"
-          element={<Landing />}/>
+          <Route 
+          path="/landing" element={<Navigate to="/" replace />} />
+
+          <Route 
+          path="/" element={<Landing />} />
 
         </Route>
         
