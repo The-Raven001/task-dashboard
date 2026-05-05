@@ -27,8 +27,6 @@ function App() {
           path="/register"
           element={<Register />}
           />
-          <Route 
-          path="/landing" element={<Navigate to="/" replace />} />
 
           <Route 
           path="/" element={<Landing />} />
