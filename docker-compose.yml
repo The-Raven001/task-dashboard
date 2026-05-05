@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:15
     container_name: task_db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d taskdb"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -20,6 +20,7 @@ services:
   backend:
     build: ./backend
     container_name: task_backend
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
@@ -32,6 +33,7 @@ services:
   frontend:
     build: ./frontend
     container_name: task_frontend
+    restart: unless-stopped
     depends_on:
       - backend
     environment:

@@ -27,7 +27,7 @@ function App() {
           element={<Register />}
           />
           <Route
-          path="/landing"
+          path="/"
           element={<Landing />}/>
 
         </Route>
